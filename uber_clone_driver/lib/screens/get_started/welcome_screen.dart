@@ -4,10 +4,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:uber_clone_driver/screens/get_started/sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class WelcomeScreen extends StatelessWidget {
 
+  static const route = '/';
 
   final TextStyle welcomeStyle = TextStyle(
     fontSize: 34,
@@ -67,7 +69,7 @@ class WelcomeScreen extends StatelessWidget {
                           onPrimary: Colors.white,
 
                         ),
-                        onPressed: () {},
+                        onPressed: () async => await Navigator.pushNamed(context, SignIn.route),
                         child: Text('SIGN IN', style: buttonStyle.copyWith(color: Colors.white),)
                     ),
                   ),
