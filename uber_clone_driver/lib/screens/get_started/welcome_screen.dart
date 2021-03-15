@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class WelcomeScreen extends StatelessWidget {
 
-  static const route = '/';
+  static const route = '/welcome';
 
   final TextStyle welcomeStyle = TextStyle(
     fontSize: 34,

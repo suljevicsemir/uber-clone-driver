@@ -1,5 +1,10 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:uber_clone_driver/components/authentication_wrapper.dart';
+import 'package:uber_clone_driver/firebase_response_results/sign_in.dart';
+import 'package:uber_clone_driver/services/firebase/authentication_service.dart';
 
 class SignIn extends StatefulWidget {
 
@@ -110,7 +115,7 @@ class _SignINState extends State<SignIn> {
                                     color: Colors.black,
                                     fontSize: 20
                                 ),
-                                errorStyle: TextStyle(fontSize: 19, color: Colors.red),
+                                errorStyle: TextStyle(fontSize: 16, color: Colors.red),
                                 focusedBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(color: Colors.black)
                                 ),
@@ -147,20 +152,40 @@ class _SignINState extends State<SignIn> {
         child: Icon( Icons.arrow_forward_rounded),
         onPressed: () async {
           if(key.currentState!.validate()) {
+            final SignInResult credential = await Provider.of<AuthenticationService>(context, listen: false).signInWithEmail(email: emailController.text, password: passwordController.text);
+            if(credential.result == SignInResults.Success) {
+              await Navigator.pushAndRemoveUntil(context,  MaterialPageRoute(builder: (context) => AuthenticationWrapper()), (_) => false);
+            }
+
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Form is valid')
-                  ],
-                ),
-              )
+                SnackBar(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  content: Row(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.error_outline_rounded, size: 36, color: Colors.white,),
+                      SizedBox(width: 10,),
+                      Flexible(
+                        child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(credential.result.parseMessage(), style: TextStyle(fontSize: 22),)
+                        ),
+                      )
+                    ],
+                  ),
+                )
             );
           }
         },
         elevation: 30,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 }
