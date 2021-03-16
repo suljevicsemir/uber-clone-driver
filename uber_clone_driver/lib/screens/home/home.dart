@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uber_clone_driver/screens/home/bottom_bar.dart';
+import 'package:uber_clone_driver/screens/home/bottom_go_button.dart';
 import 'package:uber_clone_driver/screens/home/top_bar.dart';
 
 
@@ -26,8 +27,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
-    final double height = MediaQuery.of(context).size.height;
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.blue,
@@ -43,35 +42,7 @@ class _HomeState extends State<Home> {
               children: [
                 TopHomeBar(),
                 BottomHomeBar(),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 100),
-                    child: ClipOval(
-                      child: Material(
-                        color: const Color(0xff3440c1),
-                        child: InkWell(
-                          onTap: () {},
-                          splashColor: Colors.white,
-                          child: SizedBox(
-                            height: 80,
-                            width: 80,
-                            child: Container(
-                              margin: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(200),
-                                border: Border.all(color: Colors.white, width: 2)
-                              ),
-                              child: Center(
-                                  child: Text('GO', style: TextStyle(color: Colors.white, fontSize: 30),)
-                              )
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                )
+                BottomGoButton()
               ],
             ),
           )
