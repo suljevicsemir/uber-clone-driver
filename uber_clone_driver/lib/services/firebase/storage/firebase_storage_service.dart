@@ -29,8 +29,10 @@ class FirebaseStorageService {
   }
 
   Future<Uint8List?> getCurrentDriverPicture() async {
+
     print('Downloading current driver picture from storage');
-    String? path = 'images/drivers/' + FirebaseAuth.instance.currentUser!.uid;
+    String? path = 'images/drivers/' + FirebaseAuth.instance.currentUser!.uid + '.jpg';
+    print('ovo je putanja: ' + path);
     try {
       return await storageReference.child(path).getData(10485760);
     }

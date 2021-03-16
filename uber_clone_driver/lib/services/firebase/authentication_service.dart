@@ -10,6 +10,12 @@ class AuthenticationService {
   Stream<User?>? get authStateChanges => FirebaseAuth.instance.authStateChanges();
   final User? currentUser = FirebaseAuth.instance.currentUser;
 
+  AuthenticationService() {
+    if(currentUser != null) {
+      print(currentUser!.uid);
+    }
+  }
+
   Future<UserCredential?> createAccount({required String email, required String password}) async {
     try {
       final UserCredential userCredential = await _instance.createUserWithEmailAndPassword(email: email, password: password)

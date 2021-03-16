@@ -1,8 +1,15 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 
 class TopHomeBar extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+    final File? picture = Provider.of<ProfilePicturesProvider>(context, listen: false).profilePicture;
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     return Container(
@@ -18,8 +25,8 @@ class TopHomeBar extends StatelessWidget {
                 child: InkWell(
                   splashColor: Colors.grey[800],
                   child: SizedBox(
-                      width: 42,
-                      height: 42,
+                      width: 44,
+                      height: 44,
                       child: Icon(Icons.search)
                   ),
                   onTap: () {},
@@ -42,10 +49,16 @@ class TopHomeBar extends StatelessWidget {
               ),
             ),
             Spacer(),
+            picture == null ?
             CircleAvatar(
-              radius: 30,
+              radius: 25,
               backgroundColor: Colors.transparent,
               backgroundImage: AssetImage('assets/images/person_avatar.png'),
+            ) :
+            CircleAvatar(
+              radius: 25,
+              backgroundColor: Colors.transparent,
+              backgroundImage: FileImage(picture),
             )
           ],
         ),
