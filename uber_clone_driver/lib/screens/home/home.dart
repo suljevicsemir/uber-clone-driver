@@ -42,9 +42,36 @@ class _HomeState extends State<Home> {
             child: Stack(
               children: [
                 TopHomeBar(),
-                BottomHomeBar()
-
-
+                BottomHomeBar(),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 100),
+                    child: ClipOval(
+                      child: Material(
+                        color: const Color(0xff3440c1),
+                        child: InkWell(
+                          onTap: () {},
+                          splashColor: Colors.white,
+                          child: SizedBox(
+                            height: 80,
+                            width: 80,
+                            child: Container(
+                              margin: EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(200),
+                                border: Border.all(color: Colors.white, width: 2)
+                              ),
+                              child: Center(
+                                  child: Text('GO', style: TextStyle(color: Colors.white, fontSize: 30),)
+                              )
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                )
               ],
             ),
           )
