@@ -13,18 +13,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-
-
-  void f () {
-    Map<String, String> map = {};
-    var x = map["nesto"];
-    if(map["nesto"] == null) {
-
-    }
-
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
