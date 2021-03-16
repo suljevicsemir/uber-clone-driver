@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uber_clone_driver/home.dart';
 import 'package:uber_clone_driver/screens/get_started/welcome_screen.dart';
+import 'package:uber_clone_driver/screens/home/home.dart';
 
 
 class AuthenticationWrapper extends StatelessWidget {

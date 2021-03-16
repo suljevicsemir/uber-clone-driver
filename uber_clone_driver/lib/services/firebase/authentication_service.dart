@@ -2,14 +2,12 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uber_clone_driver/firebase_response_results/sign_in.dart';
-import 'package:uber_clone_driver/screens/get_started/sign_in.dart';
+
 
 class AuthenticationService {
 
   final FirebaseAuth _instance = FirebaseAuth.instance;
   Stream<User?>? get authStateChanges => FirebaseAuth.instance.authStateChanges();
-
-
 
 
   Future<UserCredential?> createAccount({required String email, required String password}) async {
@@ -34,6 +32,7 @@ class AuthenticationService {
     try {
       final UserCredential userCredential = await _instance.signInWithEmailAndPassword(email: email, password: password)
           .timeout(const Duration(seconds: 2));
+
       return SignInResult.success();
     }
     on TimeoutException catch(err) {

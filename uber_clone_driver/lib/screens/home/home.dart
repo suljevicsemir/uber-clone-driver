@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/components/authentication_wrapper.dart';
+import 'package:uber_clone_driver/screens/home/bottom_bar.dart';
 import 'package:uber_clone_driver/services/firebase/authentication_service.dart';
 
 class Home extends StatefulWidget {
@@ -26,19 +29,24 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: () async {
-                  await Provider.of<AuthenticationService>(context, listen: false).signOut();
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => AuthenticationWrapper()), (_) => false);
-                },
-                child: Text('Sign out'),
-              )
-            ],
-          ),
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.grey,
+      body: AnnotatedRegion(
+        value: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.light
+        ),
+        child: SafeArea(
+          child: Container(
+            //margin: EdgeInsets.only(bottom: 20),
+            child: Stack(
+              children: [
+                BottomHomeBar()
+
+
+              ],
+            ),
+          )
         ),
       ),
     );
