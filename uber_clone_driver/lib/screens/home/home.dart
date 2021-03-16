@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/screens/home/bottom_bar.dart';
 import 'package:uber_clone_driver/screens/home/bottom_go_button.dart';
+import 'package:uber_clone_driver/screens/home/drawer/drawer.dart';
 import 'package:uber_clone_driver/screens/home/top_bar.dart';
 
 
@@ -17,6 +18,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
+  final globalKey = GlobalKey<ScaffoldState>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +32,7 @@ class _HomeState extends State<Home> {
       );
     }
     return Scaffold(
+      key: globalKey,
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.blue,
       body: AnnotatedRegion(
@@ -47,6 +52,7 @@ class _HomeState extends State<Home> {
           )
         ),
       ),
+      endDrawer: HomeDrawer(),
     );
   }
 }

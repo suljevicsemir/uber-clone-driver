@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
@@ -55,10 +53,15 @@ class TopHomeBar extends StatelessWidget {
               backgroundColor: Colors.transparent,
               backgroundImage: AssetImage('assets/images/person_avatar.png'),
             ) :
-            CircleAvatar(
-              radius: 25,
-              backgroundColor: Colors.transparent,
-              backgroundImage: FileImage(picture),
+            GestureDetector(
+              onTap: () async {
+                 Scaffold.of(context).openEndDrawer();
+              },
+              child: CircleAvatar(
+                radius: 25,
+                backgroundColor: Colors.transparent,
+                backgroundImage: FileImage(picture),
+              ),
             )
           ],
         ),
