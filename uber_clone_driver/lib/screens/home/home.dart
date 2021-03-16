@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:uber_clone_driver/components/authentication_wrapper.dart';
 import 'package:uber_clone_driver/screens/home/bottom_bar.dart';
-import 'package:uber_clone_driver/services/firebase/authentication_service.dart';
+
 
 class Home extends StatefulWidget {
   @override
@@ -30,7 +27,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.white,
       body: AnnotatedRegion(
         value: SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
