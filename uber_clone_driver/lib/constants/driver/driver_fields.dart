@@ -9,4 +9,7 @@ String
   car                = 'car', //string
   rating             = 'rating', // map
   numberOfTrips      = 'numberOfTrips', //int
-  status             = 'status'; // bool
+  status             = 'status', //bool
+  dateOfStart        = 'dateOfStart',  //date
+  languages          = 'languages', //array of strings
+  from               = 'from';  //string
