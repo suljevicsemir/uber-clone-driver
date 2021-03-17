@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
+import 'package:uber_clone_driver/screens/chats/chats.dart';
 
 class HomeDrawerHeader extends StatelessWidget {
   @override
@@ -58,8 +59,8 @@ class HomeDrawerHeader extends StatelessWidget {
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: () {},
-                      //onTap: () async => await Navigator.pushNamed(context, '/chats'),
+                      //onTap: () {},
+                      onTap: () async => await Navigator.pushNamed(context, Chats.route),
                       splashColor: Colors.white,
                       child: Container(
                         margin: EdgeInsets.only(left: 20),

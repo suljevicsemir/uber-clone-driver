@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/components/authentication_wrapper.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
+import 'package:uber_clone_driver/screens/chats/chats.dart';
 import 'package:uber_clone_driver/screens/get_started/sign_in.dart';
 import 'package:uber_clone_driver/screens/get_started/welcome_screen.dart';
 import 'package:uber_clone_driver/services/firebase/authentication_service.dart';
+import 'package:uber_clone_driver/theme/theme.dart';
 
 
 void main() async{
@@ -39,11 +41,13 @@ class UberDriver extends StatelessWidget {
         )
       ],
       child: MaterialApp(
+        theme: AppTheme.appTheme(),
         initialRoute: AuthenticationWrapper.route,
         routes: {
           AuthenticationWrapper.route : (context) => AuthenticationWrapper(),
           WelcomeScreen.route : (context) => WelcomeScreen(),
-          SignIn.route : (context) => SignIn()
+          SignIn.route : (context) => SignIn(),
+          Chats.route : (context) => Chats()
         },
       ),
     );
