@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
+import 'package:uber_clone_driver/screens/account/account.dart';
 import 'package:uber_clone_driver/screens/chats/chats.dart';
 
 class HomeDrawerHeader extends StatelessWidget {
@@ -27,7 +28,7 @@ class HomeDrawerHeader extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 GestureDetector(
-                  //onTap: () async => await Navigator.pushNamed(context, EditAccount.route),
+                  onTap: () async => await Navigator.pushNamed(context, Account.route),
                   child: Container(
                     margin: EdgeInsets.only(left: 20),
                     child: Row(

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:uber_clone_driver/providers/home_provider.dart';
+import 'package:uber_clone_driver/screens/home/home.dart';
 
 class BottomHomeBar extends StatelessWidget {
   @override
@@ -28,7 +31,21 @@ class BottomHomeBar extends StatelessWidget {
               Expanded(
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
-                  child: Text('You\'re offline', style: TextStyle(color: Colors.black, fontSize: 26, fontWeight: FontWeight.w500),),
+                  child: Provider.of<HomeProvider>(context).status ?
+                  Container(
+                    child: Column(
+                      children: [
+                        Text('You are currently available', style: TextStyle(color: Colors.black, fontSize: 22),),
+                        GestureDetector(
+                          onTap: () {
+                            Provider.of<HomeProvider>(context, listen: false).updateStatus();
+                          },
+                          child: Text('Go offline', style: TextStyle(color: Colors.red, fontSize: 22, fontWeight: FontWeight.w500),))
+                      ],
+                    ),
+                  )
+                  :
+                  Text('You\'re offline', style: TextStyle(color: Colors.black, fontSize: 26, fontWeight: FontWeight.w500),),
                 ),
               ),
               //Spacer(),

@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
@@ -21,6 +18,11 @@ class _HomeState extends State<Home> {
 
   final globalKey = GlobalKey<ScaffoldState>();
 
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {

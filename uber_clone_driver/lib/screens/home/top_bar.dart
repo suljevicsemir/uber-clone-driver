@@ -15,7 +15,7 @@ class TopHomeBar extends StatelessWidget {
       child: Align(
         alignment: Alignment.topCenter,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ClipOval(
               child: Material(

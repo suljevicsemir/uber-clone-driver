@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/components/authentication_wrapper.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
+import 'package:uber_clone_driver/screens/account/account.dart';
 import 'package:uber_clone_driver/screens/chats/chats.dart';
 import 'package:uber_clone_driver/screens/get_started/sign_in.dart';
 import 'package:uber_clone_driver/screens/get_started/welcome_screen.dart';
@@ -23,7 +24,24 @@ void main() async{
 
 
 
-class UberDriver extends StatelessWidget {
+class UberDriver extends StatefulWidget{
+
+
+
+
+  @override
+  _UberDriverState createState() => _UberDriverState();
+}
+
+class _UberDriverState extends State<UberDriver> with WidgetsBindingObserver {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -47,9 +65,30 @@ class UberDriver extends StatelessWidget {
           AuthenticationWrapper.route : (context) => AuthenticationWrapper(),
           WelcomeScreen.route : (context) => WelcomeScreen(),
           SignIn.route : (context) => SignIn(),
-          Chats.route : (context) => Chats()
+          Chats.route : (context) => Chats(),
+          Account.route : (context) => Account()
         },
       ),
     );
+  }
+
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeDependencies();
+    if(state == AppLifecycleState.paused) {
+      print('app is paused');
+    }
+    if(state == AppLifecycleState.detached) {
+      print('app is detached');
+    }
+
+    if(state == AppLifecycleState.inactive) {
+      print('app is inactive');
+    }
+    if(state == AppLifecycleState.resumed) {
+      print('app is resumed');
+    }
+
   }
 }
