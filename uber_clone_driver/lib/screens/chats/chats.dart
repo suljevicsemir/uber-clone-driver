@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uber_clone_driver/models/chat_info.dart';
 import 'package:uber_clone_driver/screens/chats/chat_list_tile.dart';
+import 'package:uber_clone_driver/screens/chats/search_drivers_riders/search_delegate.dart';
 
 class Chats extends StatefulWidget {
 
@@ -22,7 +23,7 @@ class _ChatsState extends State<Chats> {
         title: Text('Messages'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () async => await showSearch(context: context, delegate: DriverRiderSearchDelegate()),
             icon: Icon(Icons.search),
           )
         ],

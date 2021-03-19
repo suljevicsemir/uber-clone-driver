@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +13,7 @@ class DriverDataProvider extends ChangeNotifier{
   final CachedDataService _cachedService = CachedDataService();
   final FirestoreDriverService _firestoreService = FirestoreDriverService();
   Driver? _driver;
-
+  bool didLoad = false;
   DriverDataProvider() {
     print('Driver data provider constructor');
     if(FirebaseAuth.instance.currentUser != null) {
@@ -26,8 +27,20 @@ class DriverDataProvider extends ChangeNotifier{
 
 
   Future<void> _loadUser() async {
-    _driver = await _firestoreService.getDriverData(FirebaseAuth.instance.currentUser!.uid);
-    notifyListeners();
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      _driver = await _firestoreService.getDriverData(FirebaseAuth.instance.currentUser!.uid);
+      didLoad = true;
+      notifyListeners();
+    }
+    on TimeoutException catch(err) {
+      print('Timeout occurred while fetching the user data');
+      print(err.toString());
+    }
+    on Exception catch(err) {
+      print('Unexpected error occurred while fetching the user data');
+      print(err.toString());
+    }
   }
 
   Driver? get driver => _driver;
