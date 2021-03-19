@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class TripsAndStart extends StatelessWidget {
 
   final int numberOfTrips;
   final Timestamp dateOfStart;
-
 
   TripsAndStart({required this.numberOfTrips, required this.dateOfStart});
 
@@ -21,22 +21,6 @@ class TripsAndStart extends StatelessWidget {
   );
 
   late String time, convertedTrips, timeSubtitle;
-
-
-  double getYears(Duration duration) {
-    double returnValue = 0;
-    returnValue = (duration.inSeconds / (86400 * 30 * 12));
-    returnValue = returnValue + (duration.inSeconds ~/ (86400 * 30) - returnValue * 12) / 12;
-    return returnValue;
-  }
-
-  double getRemainingMonths(Duration duration, int years) {
-    int months = duration.inSeconds ~/ (86400 * 30);
-    double x = (months - years * 12) / 12;
-    print(months);
-    return x;
-  }
-
 
   //converts the driver's date of start
   //from timestamp into days, months or years
@@ -74,15 +58,6 @@ class TripsAndStart extends StatelessWidget {
 
     convertedTrips = convertedTrips + (numberOfTrips % 1000).toString();
   }
-
-
-
-
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
