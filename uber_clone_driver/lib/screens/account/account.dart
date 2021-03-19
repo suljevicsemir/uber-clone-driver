@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
+import 'package:uber_clone_driver/screens/account/screen_components/trips_years.dart';
 
 class Account extends StatefulWidget {
 
@@ -14,6 +16,7 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
 
+  final Color grey = const Color(0xff8f8f95);
 
   List<String> languages = [
     'English',
@@ -23,6 +26,22 @@ class _AccountState extends State<Account> {
 
   double top = 0.0;
 
+  final TextStyle greyText = TextStyle(
+    fontSize: 18,
+    color: const Color(0xff8f8f95),
+  );
+
+  final TextStyle boldText = TextStyle(
+      fontWeight: FontWeight.bold,
+      color: Colors.black,
+      fontSize: 16
+  );
+
+  Timestamp timestamp = Timestamp.fromDate(DateTime.utc(2007, DateTime.february, 10));
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,11 +120,16 @@ class _AccountState extends State<Account> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  TripsAndStart(numberOfTrips: 3104, dateOfStart: timestamp,),
+
                   Container(
-                   margin: EdgeInsets.only(bottom: 15),
+                   margin: EdgeInsets.only(top: 15),
                     child: Row(
                       children: [
                         Spacer(),
+                        // rating
+                        /*
+
                         Container(
                           padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                           decoration: BoxDecoration(
@@ -122,87 +146,37 @@ class _AccountState extends State<Account> {
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.person, color: Colors.green[900], size: 40,),
+                              Icon(Icons.person, color: Colors.green[900],),
                               SizedBox(width: 10,),
-                              Text('4.9', style: TextStyle(fontSize: 30, color: Colors.grey),),
+                              Text('4.9', style: TextStyle(fontSize: 24, color: Colors.grey),),
                             ],
                           ),
                         ),
+                         */
                         Spacer(),
                       ],
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.black.withOpacity(0.1),
-                        width: 2
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.4),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: Offset(0, 2)
-                        )
-                      ]
 
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text('3,104', style: TextStyle(fontSize: 28, letterSpacing: 0.8, fontWeight: FontWeight.w400),),
-                              Text('Trips', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w300),)
-                            ],
-                          ),
-                        ),
-                        Container(
-                          height: 50,
-                          width: 4,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.35),
-                            borderRadius: BorderRadius.circular(20)
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text('2.5', style: TextStyle(fontSize: 28, letterSpacing: 0.8, fontWeight: FontWeight.w400)),
-                              Text('Years', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w300))
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
                   SizedBox(height: 15,),
-                  Text('Enjoys reading books and watching movies', style: TextStyle(fontSize: 18, color: const Color(0xff8f8f95)),),
+                  Text('Enjoys reading books and watching movies', style: greyText),
                   SizedBox(height: 10,),
                   RichText(
                     text: TextSpan(
                         text: 'Knows ',
-                        style: TextStyle(color: const Color(0xff8f8f95), fontSize: 18),
+                        style: greyText,
                         children: [
                           TextSpan(
                               text: 'English',
-                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 16)
+                              style: boldText
                           ),
                           TextSpan(
                               text: ' Italian',
-                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)
+                              style: boldText
                           ),
                           TextSpan(
                               text: ' German',
-                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)
+                              style: boldText
                           )
                         ]
                     ),
@@ -211,15 +185,15 @@ class _AccountState extends State<Account> {
                   RichText(
                     text: TextSpan(
                         text: 'From ',
-                        style: TextStyle(color: const Color(0xff8f8f95), fontSize: 18),
+                        style: greyText,
                         children: [
                           TextSpan(
                               text: 'Heppenheim, ',
-                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 16)
+                              style: boldText
                           ),
                           TextSpan(
                               text: 'Germany',
-                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)
+                              style: boldText
                           ),
                         ]
                     ),
