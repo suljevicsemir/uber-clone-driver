@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
+import 'package:uber_clone_driver/screens/account/screen_components/driver_info.dart';
 import 'package:uber_clone_driver/screens/account/screen_components/trips_years.dart';
 
 class Account extends StatefulWidget {
@@ -121,7 +122,6 @@ class _AccountState extends State<Account> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TripsAndStart(numberOfTrips: 3104, dateOfStart: timestamp,),
-
                   Container(
                    margin: EdgeInsets.only(top: 15),
                     child: Row(
@@ -157,49 +157,8 @@ class _AccountState extends State<Account> {
                       ],
                     ),
                   ),
-
-                  SizedBox(height: 15,),
-                  Text('Enjoys reading books and watching movies', style: greyText),
-                  SizedBox(height: 10,),
-                  RichText(
-                    text: TextSpan(
-                        text: 'Knows ',
-                        style: greyText,
-                        children: [
-                          TextSpan(
-                              text: 'English',
-                              style: boldText
-                          ),
-                          TextSpan(
-                              text: ' Italian',
-                              style: boldText
-                          ),
-                          TextSpan(
-                              text: ' German',
-                              style: boldText
-                          )
-                        ]
-                    ),
-                  ),
-                  SizedBox(height: 10,),
-                  RichText(
-                    text: TextSpan(
-                        text: 'From ',
-                        style: greyText,
-                        children: [
-                          TextSpan(
-                              text: 'Heppenheim, ',
-                              style: boldText
-                          ),
-                          TextSpan(
-                              text: 'Germany',
-                              style: boldText
-                          ),
-                        ]
-                    ),
-                  ),
-
-                  Divider(height: 40, color: Colors.grey, thickness: 3,),
+                  DriverInfo(shortDescription: 'Enjoys reading books and watching movies', from: 'Heppenheim,Germany',),
+                  Divider(height: 40, color: Colors.grey, thickness: 1,),
                   Row(
                     children: [
                       Expanded(child: Text('Compliments', style: TextStyle(fontSize: 26),)),
