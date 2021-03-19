@@ -4,6 +4,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:uber_clone_driver/models/driver/driver.dart';
+import 'package:uber_clone_driver/providers/driver_data_provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/screens/account/account.dart';
 import 'package:uber_clone_driver/screens/chats/chats.dart';
@@ -12,7 +15,50 @@ class HomeDrawerHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final File? picture = Provider.of<ProfilePicturesProvider>(context, listen: false).profilePicture;
-    return Container(
+    Driver? driver = Provider.of<DriverDataProvider>(context, listen: false).driver;
+    if( driver == null) {
+      driver = Provider.of<DriverDataProvider>(context).driver;
+    }
+
+    return (driver == null || picture == null) ?
+    Shimmer.fromColors(
+      //direction: ShimmerDirection.ttb,
+        child: Container(
+          height: 100,
+          margin: EdgeInsets.only(left: 20, top: 10),
+          width: double.infinity,
+          child: Row(
+            children: <Widget>[
+              ClipOval(
+                child: SizedBox(
+                  height: 80,
+                  width: 80,
+                  child: Container(
+                    color: Colors.red,
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4.0),
+              ),
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: const Text(
+                    'Loading, please wait...',
+                    style: TextStyle(
+                      fontSize: 48.0,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      baseColor: Colors.black12,
+      highlightColor: Colors.white,
+    ) :
+    Container(
       color: Colors.black,
       child: DrawerHeader(
         margin: EdgeInsets.zero,
@@ -35,17 +81,17 @@ class HomeDrawerHeader extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 40,
-                          backgroundImage: FileImage(picture!),
+                          backgroundImage: FileImage(picture),
                           backgroundColor: Colors.transparent,
                         ),
                         Container(
                             margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05),
                             child: RichText(
                               text: TextSpan(
-                                  text: 'Sebastian',
+                                  text: driver.firstName,
                                   style: TextStyle(color: Colors.white),
                                   children: [
-                                    TextSpan( text: ' ' + 'Vettel')
+                                    TextSpan( text: ' ' + driver.lastName)
                                   ]
                               ),
                             )

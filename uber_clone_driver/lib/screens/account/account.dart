@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/screens/account/screen_components/driver_info.dart';
 import 'package:uber_clone_driver/screens/account/screen_components/trips_years.dart';
@@ -64,15 +65,9 @@ class _AccountState extends State<Account> {
                   expandedHeight: MediaQuery.of(context).size.height * 0.45,
                   pinned: true,
                   actions: [
-                    ClipOval(
-                      child: Material(
-                        color: Colors.black, // button color
-                        child: InkWell(
-                          splashColor: Colors.grey, // inkwell color
-                          child: SizedBox(width: 56, height: 56, child: Icon(Icons.edit, color: Colors.white,)),
-                          onTap: () {},
-                        ),
-                      ),
+                    IconButton(
+                       onPressed: () {},
+                        icon: Icon(Icons.edit ),
                     )
                   ],
                   flexibleSpace: LayoutBuilder(
@@ -161,8 +156,13 @@ class _AccountState extends State<Account> {
                   Divider(height: 40, color: Colors.grey, thickness: 1,),
                   Row(
                     children: [
-                      Expanded(child: Text('Compliments', style: TextStyle(fontSize: 26),)),
-                      Text('View all', style: TextStyle(color: Colors.blue[900], fontSize: 24),)
+                      Expanded(child: Text('Compliments and ratings', style: TextStyle(fontSize: 22),)),
+                      GestureDetector(
+                        onTap: () {
+
+                        },
+                        child: Text('View all', style: TextStyle(color: Colors.blue[900], fontSize: 24),)
+                      )
                     ],
                   )
                 ],

@@ -1,11 +1,8 @@
-
-
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:uber_clone_driver/models/driver/driver.dart';
 import 'package:uber_clone_driver/models/driver/driver_personal_info.dart';
 import 'package:uber_clone_driver/constants/driver/driver_fields.dart' as fields;
 
-class UserDataCached {
+class CachedDataService {
   final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
   Future<DriverPersonalInfo?> readData() async {

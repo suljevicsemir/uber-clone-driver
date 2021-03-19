@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/components/authentication_wrapper.dart';
+import 'package:uber_clone_driver/providers/driver_data_provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/screens/account/account.dart';
 import 'package:uber_clone_driver/screens/chats/chats.dart';
@@ -55,6 +56,10 @@ class _UberDriverState extends State<UberDriver> with WidgetsBindingObserver {
         ),
         ChangeNotifierProvider(
           create: (context) => ProfilePicturesProvider(),
+          lazy: false,
+        ),
+        ChangeNotifierProvider(
+          create: (context) => DriverDataProvider(),
           lazy: false,
         )
       ],

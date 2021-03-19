@@ -11,5 +11,5 @@ String
   numberOfTrips      = 'numberOfTrips', //int
   status             = 'status', //bool
   dateOfStart        = 'dateOfStart',  //date
-  languages          = 'languages', //array of strings
+  language          = 'language', //array of strings
   from               = 'from';  //string
