@@ -12,8 +12,20 @@ class FirebaseStorageService {
 
 
 
-  Future<void> uploadPictureFromFile(File file) async {
-
+  Future<TaskSnapshot?> uploadPictureFromFile(File file) async {
+    print('Uploading picture...');
+    try {
+      TaskSnapshot? task = await storageReference.child("images/drivers/${FirebaseAuth.instance.currentUser!.uid}").putFile(file);
+      if(task.state == TaskState.success) {
+        print('Profile picture updated');
+      }
+      return task;
+    }
+    catch (err) {
+      print('Error uploading picture');
+      print(err.toString());
+      return null;
+    }
   }
 
   Future<Uint8List?> getRiderPicture(String riderId) async {

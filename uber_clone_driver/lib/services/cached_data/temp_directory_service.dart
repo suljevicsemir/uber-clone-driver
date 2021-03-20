@@ -24,7 +24,8 @@ class TempDirectoryService {
       final Directory temp = await getTemporaryDirectory();
       File picture = File('${temp.path}/${FirebaseAuth.instance.currentUser!.uid}');
       if(await picture.exists()) {
-        print('Profile picture already exists!');
+        print('Profile picture already exists, it will be replaced!');
+        picture = await picture.writeAsBytes(list);
         return picture;
       }
 

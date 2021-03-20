@@ -14,7 +14,7 @@ import 'package:uber_clone_driver/screens/chats/chats.dart';
 class HomeDrawerHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final File? picture = Provider.of<ProfilePicturesProvider>(context, listen: false).profilePicture;
+    final File? picture = Provider.of<ProfilePicturesProvider>(context).profilePicture;
     Driver? driver = Provider.of<DriverDataProvider>(context, listen: false).driver;
     if( driver == null) {
       driver = Provider.of<DriverDataProvider>(context).driver;

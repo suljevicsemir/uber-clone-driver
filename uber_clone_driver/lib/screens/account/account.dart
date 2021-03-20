@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
+
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
+import 'package:uber_clone_driver/screens/account/screen_components/bottom_modal_sheet.dart' as sheet;
 import 'package:uber_clone_driver/screens/account/screen_components/driver_info.dart';
 import 'package:uber_clone_driver/screens/account/screen_components/trips_years.dart';
 
@@ -69,8 +70,8 @@ class _AccountState extends State<Account> {
                   pinned: true,
                   actions: [
                     IconButton(
-                       onPressed: () {
-                         showModalBottomSheet(context: context,
+                       onPressed: () async{
+                         await showModalBottomSheet(context: context,
                            backgroundColor: Colors.white,
                            shape: RoundedRectangleBorder(
                              borderRadius: BorderRadius.only(
@@ -78,59 +79,9 @@ class _AccountState extends State<Account> {
                                topLeft: Radius.circular(20)
                              )
                            ),
-                           builder: (context) {
-                           return Container(
-                             height: 180,
-                             padding: EdgeInsets.only(top: 10),
-                             child:  Container(
-                               margin: const EdgeInsets.only(left: 10, top: 10),
-                               child: Column(
-                                 mainAxisAlignment: MainAxisAlignment.start,
-                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                 children: [
-                                   const Text('Edit profile photo', style: const TextStyle(fontSize: 20, color: Colors.black54,)),
-                                   SizedBox(height: 20,),
-                                   Row(
-                                     mainAxisAlignment: MainAxisAlignment.start,
-                                     children: [
-                                       ClipOval(
-                                         child: Container(
-                                           color: Colors.green,
-                                           child:  SizedBox(
-                                             height: 40,
-                                             width: 40,
-                                             child: const Icon(Icons.photo, color: Colors.white,),
-                                           ),
-                                         ),
-                                       ),
-                                       SizedBox(width: 20,),
-                                       const Text('Gallery', style: const TextStyle(fontSize: 19, color: Colors.black87),)
-                                     ],
-                                   ),
-                                   SizedBox(height: 15,),
-                                   Row(
-                                     mainAxisAlignment: MainAxisAlignment.start,
-                                     children: [
-                                       ClipOval(
-                                         child: Container(
-                                           color: Colors.blueGrey,
-                                           child:  SizedBox(
-                                             height: 40,
-                                             width: 40,
-                                             child: const Icon(Icons.camera_alt, color: Colors.white,),
-                                           ),
-                                         ),
-                                       ),
-                                       SizedBox(width: 20,),
-                                       const Text('Camera', style: const TextStyle(fontSize: 19, color: Colors.black87),)
-                                     ],
-                                   ),
-                                   SizedBox(height: 10,),
-                                 ],
-                               ),
-                             ),
-                           );
-                         });
+                           builder: (context) => sheet.BottomSheet()
+
+                         );
                        },
                         icon: Icon(Icons.edit ),
                     )
@@ -156,7 +107,7 @@ class _AccountState extends State<Account> {
                         background: Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: FileImage(Provider.of<ProfilePicturesProvider>(context, listen: false).profilePicture!),
+                              image: FileImage(Provider.of<ProfilePicturesProvider>(context).profilePicture!),
                               fit: BoxFit.cover
                             )
                           ),

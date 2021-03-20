@@ -4,7 +4,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uber_clone_driver/services/cached_data/temp_directory_service.dart';
 import 'package:uber_clone_driver/services/firebase/storage/firebase_storage_service.dart';
 
@@ -13,7 +15,7 @@ class ProfilePicturesProvider extends ChangeNotifier {
   final FirebaseStorageService storageService = FirebaseStorageService();
   final TempDirectoryService tempDirectoryService = TempDirectoryService();
 
-  File? profilePicture;
+  File? _profilePicture;
   Map<String, File>? riderProfilePictures = {};
 
   ProfilePicturesProvider() {
@@ -30,10 +32,10 @@ class ProfilePicturesProvider extends ChangeNotifier {
   }
 
   Future<void> _loadProfilePicture() async {
-    profilePicture = await tempDirectoryService.loadDriverPicture();
-    if(profilePicture == null) {
+    _profilePicture = await tempDirectoryService.loadDriverPicture();
+    if(_profilePicture == null) {
       Uint8List list = (await storageService.getCurrentDriverPicture())!;
-      profilePicture = await tempDirectoryService.storeDriverPicture(list);
+      _profilePicture = await tempDirectoryService.storeDriverPicture(list);
     }
     notifyListeners();
   }
@@ -63,6 +65,36 @@ class ProfilePicturesProvider extends ChangeNotifier {
     Uint8List? list = await storageService.getRiderPicture(riderId);
     riderProfilePictures![riderId] = (await tempDirectoryService.storeRiderPicture(riderId, list!))!;
     return riderProfilePictures![riderId]!;
+
+  }
+
+  Future<File?> pickImageFromGallery() async {
+    final ImagePicker picker = ImagePicker();
+    final PickedFile? pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    if(pickedFile == null) {
+      return null;
+    }
+
+    Uint8List list = await pickedFile.readAsBytes();
+    final File? picture = await tempDirectoryService.storeDriverPicture(list);
+    if( picture == null) return null;
+    TaskSnapshot? snapshot = await storageService.uploadPictureFromFile(picture);
+    if(snapshot == null)
+      return null;
+    _profilePicture = File(pickedFile.path);
+    notifyListeners();
+    return picture;
+
+
+
+
+  }
+
+
+  File? get profilePicture => _profilePicture;
+
+  Future<void> pickImageFromCamera() async {
 
   }
 

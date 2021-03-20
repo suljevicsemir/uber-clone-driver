@@ -2,6 +2,7 @@
     package="com.semirsuljevic.uber_clone_driver">
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
    <application
+        android:requestLegacyExternalStorage="true"
         android:label="uber_clone_driver"
         android:icon="@mipmap/ic_launcher">
         <activity
