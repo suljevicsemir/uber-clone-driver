@@ -2,7 +2,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:uber_clone_driver/models/driver/driver.dart';
 import 'package:uber_clone_driver/models/rider/rider.dart';
+import 'package:uber_clone_driver/screens/rider_account/rider_account.dart';
 
 class DriverRiderSearchDelegate extends SearchDelegate{
 
@@ -58,6 +60,9 @@ class DriverRiderSearchDelegate extends SearchDelegate{
         itemCount: riders.length,
         itemBuilder: (context, index) {
           return GestureDetector(
+            onTap: () async {
+              await Navigator.pushNamed(context, RiderAccount.route, arguments: riders.elementAt(index));
+            },
             /*onTap: () async => await Navigator.pushNamed(context, DriverContact.route, arguments:
             MockDriver.fromObject(_drivers.elementAt(index))
             ),*/

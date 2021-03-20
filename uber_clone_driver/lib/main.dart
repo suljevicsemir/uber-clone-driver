@@ -2,12 +2,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/components/authentication_wrapper.dart';
+import 'package:uber_clone_driver/models/rider/rider.dart';
 import 'package:uber_clone_driver/providers/driver_data_provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/screens/account/account.dart';
 import 'package:uber_clone_driver/screens/chats/chats.dart';
 import 'package:uber_clone_driver/screens/get_started/sign_in.dart';
 import 'package:uber_clone_driver/screens/get_started/welcome_screen.dart';
+import 'package:uber_clone_driver/screens/rider_account/rider_account.dart';
 import 'package:uber_clone_driver/services/firebase/authentication_service.dart';
 import 'package:uber_clone_driver/theme/theme.dart';
 
@@ -71,7 +73,8 @@ class _UberDriverState extends State<UberDriver> with WidgetsBindingObserver {
           WelcomeScreen.route : (context) => WelcomeScreen(),
           SignIn.route : (context) => SignIn(),
           Chats.route : (context) => Chats(),
-          Account.route : (context) => Account()
+          Account.route : (context) => Account(),
+          RiderAccount.route: (context) => RiderAccount(rider: ModalRoute.of(context)!.settings.arguments as Rider)
         },
       ),
     );

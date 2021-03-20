@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/models/chat_info.dart';
+import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/screens/chats/chat_list_tile.dart';
 import 'package:uber_clone_driver/screens/chats/search_drivers_riders/search_delegate.dart';
 
@@ -53,6 +56,24 @@ class _ChatsState extends State<Chats> {
                   ),
                 );
               }
+
+              List<String> riderIds = [];
+
+              for(int i = 0; i < snapshot.data.docs.length; i++) {
+                String id = snapshot.data.docs[i].get('firebaseUserId');
+                if(Provider.of<ProfilePicturesProvider>(context, listen: false).riderProfilePictures![id] == null) {
+                  riderIds.add(id);
+                }
+              }
+
+              if(riderIds.length > 0) {
+                SchedulerBinding.instance!.addPostFrameCallback((_) async {
+                  await Provider.of<ProfilePicturesProvider>(
+                      context, listen: false).getList(riderIds);
+                });
+              }
+
+
               return Container(
                 child: ListView.separated(
                     separatorBuilder: (context, index) => Divider(color: Colors.grey, height: 0.0,),

@@ -32,11 +32,14 @@ class _AccountState extends State<Account> {
     fontSize: 18,
     color: const Color(0xff8f8f95),
   );
-
   final TextStyle boldText = TextStyle(
       fontWeight: FontWeight.bold,
       color: Colors.black,
       fontSize: 16
+  );
+  TextStyle bottomSheetStyle = TextStyle(
+    fontSize: 19,
+    color: Colors.black54
   );
 
   Timestamp timestamp = Timestamp.fromDate(DateTime.utc(2007, DateTime.february, 10));
@@ -66,7 +69,69 @@ class _AccountState extends State<Account> {
                   pinned: true,
                   actions: [
                     IconButton(
-                       onPressed: () {},
+                       onPressed: () {
+                         showModalBottomSheet(context: context,
+                           backgroundColor: Colors.white,
+                           shape: RoundedRectangleBorder(
+                             borderRadius: BorderRadius.only(
+                               topRight: Radius.circular(20),
+                               topLeft: Radius.circular(20)
+                             )
+                           ),
+                           builder: (context) {
+                           return Container(
+                             height: 180,
+                             padding: EdgeInsets.only(top: 10),
+                             child:  Container(
+                               margin: const EdgeInsets.only(left: 10, top: 10),
+                               child: Column(
+                                 mainAxisAlignment: MainAxisAlignment.start,
+                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                 children: [
+                                   const Text('Edit profile photo', style: const TextStyle(fontSize: 20, color: Colors.black54,)),
+                                   SizedBox(height: 20,),
+                                   Row(
+                                     mainAxisAlignment: MainAxisAlignment.start,
+                                     children: [
+                                       ClipOval(
+                                         child: Container(
+                                           color: Colors.green,
+                                           child:  SizedBox(
+                                             height: 40,
+                                             width: 40,
+                                             child: const Icon(Icons.photo, color: Colors.white,),
+                                           ),
+                                         ),
+                                       ),
+                                       SizedBox(width: 20,),
+                                       const Text('Gallery', style: const TextStyle(fontSize: 19, color: Colors.black87),)
+                                     ],
+                                   ),
+                                   SizedBox(height: 15,),
+                                   Row(
+                                     mainAxisAlignment: MainAxisAlignment.start,
+                                     children: [
+                                       ClipOval(
+                                         child: Container(
+                                           color: Colors.blueGrey,
+                                           child:  SizedBox(
+                                             height: 40,
+                                             width: 40,
+                                             child: const Icon(Icons.camera_alt, color: Colors.white,),
+                                           ),
+                                         ),
+                                       ),
+                                       SizedBox(width: 20,),
+                                       const Text('Camera', style: const TextStyle(fontSize: 19, color: Colors.black87),)
+                                     ],
+                                   ),
+                                   SizedBox(height: 10,),
+                                 ],
+                               ),
+                             ),
+                           );
+                         });
+                       },
                         icon: Icon(Icons.edit ),
                     )
                   ],
