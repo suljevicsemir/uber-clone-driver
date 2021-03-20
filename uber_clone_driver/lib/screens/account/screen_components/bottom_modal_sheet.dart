@@ -18,41 +18,51 @@ class BottomSheet extends StatelessWidget {
             SizedBox(height: 20,),
             GestureDetector(
               onTap: () async => await Provider.of<ProfilePicturesProvider>(context, listen: false).pickImageFromGallery(),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  ClipOval(
-                    child: Container(
-                      color: Colors.green,
-                      child:  SizedBox(
-                        height: 40,
-                        width: 40,
-                        child: const Icon(Icons.photo, color: Colors.white,),
+              child: Container(
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ClipOval(
+                      child: Container(
+                        color: Colors.green,
+                        child:  SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: const Icon(Icons.photo, color: Colors.white,),
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 20,),
-                  const Text('Gallery', style: const TextStyle(fontSize: 19, color: Colors.black87),)
-                ],
+                    SizedBox(width: 20,),
+                    const Text('Gallery', style: const TextStyle(fontSize: 19, color: Colors.black87),)
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 15,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ClipOval(
-                  child: Container(
-                    color: Colors.blueGrey,
-                    child:  SizedBox(
-                      height: 40,
-                      width: 40,
-                      child: const Icon(Icons.camera_alt, color: Colors.white,),
+            GestureDetector(
+              onTap: () async => await Provider.of<ProfilePicturesProvider>(context, listen: false).pickImageFromCamera(),
+              child: Container(
+                color: Colors.white,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ClipOval(
+                      child: Container(
+                        color: Colors.blueGrey,
+                        child:  SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: const Icon(Icons.camera_alt, color: Colors.white,),
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(width: 20,),
+                    const Text('Camera', style: const TextStyle(fontSize: 19, color: Colors.black87),)
+                  ],
                 ),
-                SizedBox(width: 20,),
-                const Text('Camera', style: const TextStyle(fontSize: 19, color: Colors.black87),)
-              ],
+              ),
             ),
             SizedBox(height: 10,),
           ],

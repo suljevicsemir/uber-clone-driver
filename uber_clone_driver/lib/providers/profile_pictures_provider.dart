@@ -94,8 +94,23 @@ class ProfilePicturesProvider extends ChangeNotifier {
 
   File? get profilePicture => _profilePicture;
 
-  Future<void> pickImageFromCamera() async {
+  Future<File?> pickImageFromCamera() async {
+    final ImagePicker picker = ImagePicker();
+    final PickedFile? pickedFile = await picker.getImage(source: ImageSource.camera);
 
+    if(pickedFile == null) {
+      return null;
+    }
+
+    Uint8List list = await pickedFile.readAsBytes();
+    final File? picture = await tempDirectoryService.storeDriverPicture(list);
+    if( picture == null) return null;
+    TaskSnapshot? snapshot = await storageService.uploadPictureFromFile(picture);
+    if(snapshot == null)
+      return null;
+    _profilePicture = File(pickedFile.path);
+    notifyListeners();
+    return picture;
   }
 
 
