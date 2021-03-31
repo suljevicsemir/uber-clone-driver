@@ -6,6 +6,7 @@ import 'package:uber_clone_driver/models/rider/rider.dart';
 import 'package:uber_clone_driver/providers/driver_data_provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/screens/account/account.dart';
+import 'package:uber_clone_driver/screens/chat/chat.dart';
 import 'package:uber_clone_driver/screens/chats/chats.dart';
 import 'package:uber_clone_driver/screens/get_started/sign_in.dart';
 import 'package:uber_clone_driver/screens/get_started/welcome_screen.dart';
@@ -74,7 +75,8 @@ class _UberDriverState extends State<UberDriver> with WidgetsBindingObserver {
           SignIn.route : (context) => SignIn(),
           Chats.route : (context) => Chats(),
           Account.route : (context) => Account(),
-          RiderAccount.route: (context) => RiderAccount(rider: ModalRoute.of(context)!.settings.arguments as Rider)
+          RiderAccount.route: (context) => RiderAccount(rider: ModalRoute.of(context)!.settings.arguments as Rider),
+          Chat.route : (context) => Chat(rider: ModalRoute.of(context)!.settings.arguments as Rider,)
         },
       ),
     );

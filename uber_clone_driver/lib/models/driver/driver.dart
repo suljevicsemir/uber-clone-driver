@@ -5,7 +5,6 @@ import 'package:uber_clone_driver/models/driver/driver_personal_info.dart';
 
 class Driver extends ChangeNotifier{
 
-  //DriverPersonalInfo? personalInfo;
 
   Map<String, String> rating = {};
   int? numberOfTrips;
@@ -14,6 +13,7 @@ class Driver extends ChangeNotifier{
   late List<String> languages = [];
 
   late String
+    id,
     firstName,
     lastName,
     email,
@@ -23,6 +23,7 @@ class Driver extends ChangeNotifier{
 
 
   Driver.fromSnapshot(DocumentSnapshot snapshot) {
+    id = snapshot.id;
     snapshot.get(fields.rating).forEach((key, value) {
         rating[key] = value.toString();
     });

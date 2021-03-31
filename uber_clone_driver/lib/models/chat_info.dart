@@ -1,18 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:uber_clone_driver/constants/chatting/chat_list.dart' as fields;
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 
 @immutable
 class ChatInfo {
-  final String chatId,
+   final String
+      chatId,
       lastMessage,
       lastMessageSenderFirebaseId,
-  //other participant user id
       firebaseUserId,
       firstName,
       phoneNumber,
       lastName;
-  final Timestamp lastMessageTimestamp;
+   final Timestamp lastMessageTimestamp;
 
   ChatInfo.fromSnapshot(DocumentSnapshot snapshot) :
         chatId                      = snapshot.id,
@@ -23,5 +23,4 @@ class ChatInfo {
         firstName                   = snapshot[fields.firstName],
         lastName                    = snapshot[fields.lastName],
         phoneNumber                 = snapshot[fields.phoneNumber];
-
 }

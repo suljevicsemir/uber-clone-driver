@@ -86,13 +86,10 @@ class ProfilePicturesProvider extends ChangeNotifier {
     notifyListeners();
     return picture;
 
-
-
-
   }
 
 
-  File? get profilePicture => _profilePicture;
+
 
   Future<File?> pickImageFromCamera() async {
     final ImagePicker picker = ImagePicker();
@@ -113,10 +110,6 @@ class ProfilePicturesProvider extends ChangeNotifier {
     return picture;
   }
 
-
-
-
-
-
+  File? get profilePicture => _profilePicture;
 
 }
