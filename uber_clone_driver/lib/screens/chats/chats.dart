@@ -34,7 +34,7 @@ class _ChatsState extends State<Chats> {
       body: SafeArea(
         child: Container(
           child: StreamBuilder(
-            stream: FirebaseFirestore.instance.collection('drivers').doc(FirebaseAuth.instance.currentUser!.uid).collection('chats').snapshots(),
+            stream: FirebaseFirestore.instance.collection('drivers').doc(FirebaseAuth.instance.currentUser!.uid).collection('chats').orderBy('lastMessageTimestamp', descending: true).snapshots(),
             builder: (context, AsyncSnapshot snapshot) {
               if(snapshot.hasError)
                 return Text('There was an error');
@@ -68,8 +68,7 @@ class _ChatsState extends State<Chats> {
 
               if(riderIds.length > 0) {
                 SchedulerBinding.instance!.addPostFrameCallback((_) async {
-                  await Provider.of<ProfilePicturesProvider>(
-                      context, listen: false).getList(riderIds);
+                  await Provider.of<ProfilePicturesProvider>(context, listen: false).getList(riderIds);
                 });
               }
 
@@ -78,7 +77,8 @@ class _ChatsState extends State<Chats> {
                 child: ListView.separated(
                     separatorBuilder: (context, index) => Divider(color: Colors.grey, height: 0.0,),
                     itemCount: snapshot.data.docs.length,
-                    itemBuilder: (context, index) => snapshot.data.docs[index].get('lastMessage') != '' ?  ChatListTile(chatInfo: ChatInfo.fromSnapshot(snapshot.data.docs[index])) : Container()
+                    itemBuilder: (context, index) => snapshot.data.docs[index].get('lastMessage') != '' ?
+                    ChatListTile(chatInfo: ChatInfo.fromSnapshot(snapshot.data.docs[index])) : Container()
                 ),
               );
             },

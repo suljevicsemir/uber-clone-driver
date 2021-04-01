@@ -1,6 +1,12 @@
+import 'dart:io';
+
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter/material.dart';
 import 'package:uber_clone_driver/models/chat_info.dart';
+import 'package:uber_clone_driver/models/rider/rider.dart';
+import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
+import 'package:uber_clone_driver/screens/chat/chat.dart';
 
 class ChatListTile extends StatelessWidget {
 
@@ -11,8 +17,18 @@ class ChatListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {},
+
+    File? picture = Provider.of<ProfilePicturesProvider>(context, listen: false).riderProfilePictures![chatInfo.firebaseUserId];
+
+    if(picture == null) {
+      picture = Provider.of<ProfilePicturesProvider>(context).riderProfilePictures![chatInfo.firebaseUserId];
+    }
+
+    return picture == null ? Container() :
+
+
+    ElevatedButton(
+      onPressed: () async => await Navigator.pushNamed(context, Chat.route, arguments: Rider.fromChatInfo(chatInfo)),
       style: ElevatedButton.styleFrom(
         primary: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0.0,
@@ -28,7 +44,7 @@ class ChatListTile extends StatelessWidget {
             CircleAvatar(
               radius: 30.0,
               backgroundColor: Colors.transparent,
-              backgroundImage: AssetImage('assets/images/person_avatar.png'),
+              backgroundImage: FileImage(picture)
             ),
             Expanded(
               child: Container(
@@ -38,20 +54,20 @@ class ChatListTile extends StatelessWidget {
                   children: [
                     RichText(
                       text: TextSpan(
-                          text: 'Somebody',
+                          text: chatInfo.firstName,
                           style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w500),
                           children: [
-                            TextSpan( text: ' ' + 'YAH')
+                            TextSpan( text: ' ' + chatInfo.lastName)
                           ]
                       ),
                     ),
                     SizedBox(height: 10,),
-                    Text('message', style: Theme.of(context).textTheme.headline1, overflow: TextOverflow.ellipsis,)
+                    Text(chatInfo.lastMessage, style: Theme.of(context).textTheme.headline1, overflow: TextOverflow.ellipsis,)
                   ],
                 ),
               ),
             ),
-            //Text(timeago.format(////date))
+            Text(timeago.format(chatInfo.lastMessageTimestamp.toDate(), locale: 'en_short'))
           ],
         ),
       ),

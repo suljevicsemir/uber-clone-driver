@@ -8,7 +8,7 @@ import 'package:uber_clone_driver/models/rider/rider.dart';
 
 class ChatProvider {
   final FirebaseFirestore _instance = FirebaseFirestore.instance;
-  final CollectionReference _usersReference = FirebaseFirestore.instance.collection('users');
+  final CollectionReference _usersReference = FirebaseFirestore.instance.collection('drivers');
   final CollectionReference _chatReference = FirebaseFirestore.instance.collection('chats');
 
   final Driver driver;
@@ -31,7 +31,7 @@ class ChatProvider {
 
 
     await _instance.runTransaction((transaction) async {
-      transaction.update(_usersReference.doc(  ).collection('chats').doc(chatId), {
+      transaction.update(_usersReference.doc( driver.id ).collection('chats').doc(chatId), {
         chat_list.lastMessage                 : message.message,
         chat_list.lastMessageTimestamp        : message.timestamp,
         chat_list.lastMessageSenderFirebaseId : driver.id
