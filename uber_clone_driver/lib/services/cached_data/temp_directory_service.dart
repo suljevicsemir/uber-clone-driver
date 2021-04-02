@@ -53,7 +53,7 @@ class TempDirectoryService {
         });
       }
       else {
-        await _createDriverDirectory();
+        await _createRiderDirectory();
       }
     }
     catch(err) {
@@ -90,13 +90,40 @@ class TempDirectoryService {
 
 
 
-  Future<void> _createDriverDirectory() async {
+  Future<void> _createRiderDirectory() async {
     try {
       final Directory temp = await getTemporaryDirectory();
       await Directory('${temp.path}/riders').create();
     }
     catch(err) {
       print('error while creating drivers directory');
+    }
+  }
+
+  Future<void> deleteRiderPictures() async {
+    try {
+      final Directory temp = await getTemporaryDirectory();
+      var x =  Directory('${temp.path}/riders');
+      await x.delete(recursive: true);
+      print('deleted');
+
+    }
+    catch(err) {
+      print('Error while deleting rider pictures!');
+      print(err.toString());
+    }
+  }
+
+  Future<void> deleteDriverPicture() async {
+    try {
+      final Directory temp = await getTemporaryDirectory();
+      var x =  Directory('${temp.path}/${FirebaseAuth.instance.currentUser!.uid}');
+      await x.delete(recursive: true);
+      print('deleted');
+    }
+    catch(err) {
+      print('Error deleting the driver picture');
+      print(err.toString());
     }
   }
 

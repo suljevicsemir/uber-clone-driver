@@ -112,4 +112,11 @@ class ProfilePicturesProvider extends ChangeNotifier {
 
   File? get profilePicture => _profilePicture;
 
+  Future<void> deleteRiderPictures() async {
+    await tempDirectoryService.deleteRiderPictures();
+  }
+  Future<void> deleteDriverPicture() async {
+    await tempDirectoryService.deleteDriverPicture();
+  }
+
 }

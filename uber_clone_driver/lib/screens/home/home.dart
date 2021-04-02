@@ -48,7 +48,28 @@ class _HomeState extends State<Home> {
               children: [
                 TopHomeBar(),
                 BottomHomeBar(),
-                BottomGoButton()
+                BottomGoButton(),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 100),
+                    child: ElevatedButton(
+                      onPressed: () async =>await Provider.of<ProfilePicturesProvider>(context, listen: false).deleteRiderPictures(),
+                      child: Text('Delete rider pictures'),
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 100),
+                    child: ElevatedButton(
+                      onPressed: () async =>await Provider.of<ProfilePicturesProvider>(context, listen: false).deleteDriverPicture(),
+                      child: Text('Delete driver picture'),
+                    ),
+                  ),
+                )
+
               ]
             ),
           )
