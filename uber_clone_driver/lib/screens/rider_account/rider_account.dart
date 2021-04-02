@@ -8,6 +8,8 @@ import 'package:uber_clone_driver/models/chat_info.dart';
 import 'package:uber_clone_driver/models/rider/rider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/screens/chat/chat.dart';
+import 'package:uber_clone_driver/screens/rider_account/components/call_rider.dart';
+import 'package:uber_clone_driver/screens/rider_account/components/sms_rider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RiderAccount extends StatefulWidget {
@@ -195,21 +197,21 @@ class _RiderAccountState extends State<RiderAccount> with TickerProviderStateMix
                   margin: EdgeInsets.only(left: 20, right: 20),
                   child: Divider(height: 30, color: Colors.grey, thickness: 0.5,)
               ),
-              /*AnimatedSize(
+              AnimatedSize(
                       vsync: this,
                       duration: const Duration(milliseconds: 200),
                       child: showContactTypes ?
                       Container(
                         child: Column(
                           children: [
-                            //SMSDriver(phoneNumber: widget.mockDriver.phoneNumber,),
-                            //CallDriver(phoneNumber: widget.mockDriver.phoneNumber,),
+                            SMSRider(phoneNumber: widget.rider.phoneNumber,),
+                            CallRider(phoneNumber: widget.rider.phoneNumber,),
                             //ScheduleRide(),
                           ],
                         ),
                       ) : Container(),
 
-                    ),*/
+                    ),
             ],
           ),
         ),
