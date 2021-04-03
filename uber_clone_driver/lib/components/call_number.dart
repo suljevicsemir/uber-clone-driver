@@ -11,8 +11,10 @@ class CallNumber extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () async {
-        if(await canLaunch(phoneNumber)) {
-          launch(phoneNumber);
+
+        print(phoneNumber);
+        if(await canLaunch("tel://" + phoneNumber)) {
+          launch("tel://" + phoneNumber);
         }
         else {
           ScaffoldMessenger.of(context).showSnackBar(

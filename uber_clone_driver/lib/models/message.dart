@@ -16,6 +16,7 @@ class Message {
 
 
 
+
   Message.fromSnapshot(DocumentSnapshot snapshot) :
       message        = snapshot.get(fields.message),
       firebaseUserId = snapshot.get(fields.firebaseUserId),

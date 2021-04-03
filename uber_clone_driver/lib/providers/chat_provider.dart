@@ -30,7 +30,6 @@ class ChatProvider {
       transaction.set(_chatReference.doc(chatId).collection('messages').doc(DateTime.now().millisecondsSinceEpoch.toString()), snapshot);
     });
 
-    print(driver.id);
     await _instance.runTransaction((transaction) async {
       transaction.update(_driversReference.doc( driver.id ).collection('chats').doc(chatId), {
         chat_list.lastMessage                 : message.message,

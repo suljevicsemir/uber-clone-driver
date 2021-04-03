@@ -1,15 +1,18 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:uber_clone_driver/components/call_number.dart';
 import 'package:uber_clone_driver/models/driver/driver.dart';
 import 'package:uber_clone_driver/models/message.dart';
 import 'package:uber_clone_driver/models/rider/rider.dart';
 import 'package:uber_clone_driver/providers/chat_provider.dart';
 import 'package:uber_clone_driver/providers/driver_data_provider.dart';
+import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 
 class Chat extends StatefulWidget {
 
@@ -28,7 +31,7 @@ class _ChatState extends State<Chat> {
   late ChatProvider chatProvider;
   final TextEditingController textController = TextEditingController();
   final ScrollController scrollController = ScrollController();
-
+  late File picture;
   late String chatId;
 
 
@@ -38,7 +41,7 @@ class _ChatState extends State<Chat> {
     Driver? x = Provider.of<DriverDataProvider>(context, listen: false).driver;
     chatProvider = ChatProvider(driver: x!, rider: widget.rider);
     _scrollChatToBottom();
-
+    picture = Provider.of<ProfilePicturesProvider>(context).riderProfilePictures![widget.rider.firebaseId]!;
   }
 
 
@@ -66,12 +69,21 @@ class _ChatState extends State<Chat> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0.0,
-        title: Text(widget.rider.firstName),
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 17,
+              backgroundColor: Colors.transparent,
+              backgroundImage: FileImage(picture),
+            ),
+            SizedBox(width: 10,),
+            Text(widget.rider.firstName)
+          ],
+        ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.call),
-            onPressed: () async {},
-          )
+
+          CallNumber(phoneNumber: widget.rider.phoneNumber,)
         ],
       ),
       body: Stack(
@@ -103,12 +115,15 @@ class _ChatState extends State<Chat> {
                   Timer(const Duration(milliseconds: 100), () => {
                     _scrollChatToBottom()
                   });
+                  int docsLength = snapshot.data.docs.length;
                   return Container(
                     child: ListView.builder(
                         controller: scrollController,
                         shrinkWrap: true,
                         itemCount: snapshot.data.docs.length,
-                        itemBuilder: (context, index) => _buildMessage(context, Message.fromSnapshot(snapshot.data.docs[index]))
+                        itemBuilder: (context, index) => _buildMessage(context, Message.fromSnapshot(snapshot.data.docs[index]),
+                            index < docsLength - 1 ? Message.fromSnapshot(snapshot.data.docs[index + 1]) : null,
+                          index == docsLength - 1)
 
                     ),
                   );
@@ -202,15 +217,30 @@ class _ChatState extends State<Chat> {
     );
   }
 
-  _buildMessage(BuildContext context, Message message ) {
+  _buildMessage(BuildContext context, Message message, Message? nextMessage, bool isLast) {
+
+    bool isNextSent = false;
     bool sentMessage = message.firebaseUserId == FirebaseAuth.instance.currentUser!.uid ? true : false;
+    if( nextMessage != null) {
+      isNextSent = nextMessage.firebaseUserId == FirebaseAuth.instance.currentUser!.uid;
+    }
+
+    bool shouldHavePicture = (isNextSent && !sentMessage) || (isLast && !sentMessage);
+
+
 
     return Row(
       mainAxisAlignment: sentMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
+        shouldHavePicture ? CircleAvatar(
+          radius: 17,
+          backgroundColor: Colors.transparent,
+          backgroundImage: FileImage(picture),
+        ):
+        Container() ,
         Container(
           padding: EdgeInsets.all(10),
-          margin: sentMessage == true ? EdgeInsets.only(right: 10, bottom: 10) : EdgeInsets.only(left: 10, bottom: 10),
+          margin: (sentMessage) ? EdgeInsets.only(right: 10, bottom: 10) : shouldHavePicture ? EdgeInsets.only(bottom: 10) :  EdgeInsets.only(left: 34 , bottom: 10),
           decoration: BoxDecoration(
               color: Colors.grey[300],
               borderRadius: BorderRadius.circular(20)
@@ -218,7 +248,7 @@ class _ChatState extends State<Chat> {
           constraints: BoxConstraints(
               maxWidth: MediaQuery.of(context).size.width / 1.5
           ),
-          child: Text(message.message, style: TextStyle(color: Colors.black, fontSize: 20),),
+          child: Text(message.message, style: TextStyle(color: Colors.black, fontSize: 17),),
         ),
       ],
     );
