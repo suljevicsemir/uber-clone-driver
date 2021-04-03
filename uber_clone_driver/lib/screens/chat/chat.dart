@@ -13,6 +13,7 @@ import 'package:uber_clone_driver/models/rider/rider.dart';
 import 'package:uber_clone_driver/providers/chat_provider.dart';
 import 'package:uber_clone_driver/providers/driver_data_provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
+import 'package:uber_clone_driver/screens/rider_account/rider_account.dart';
 
 class Chat extends StatefulWidget {
 
@@ -232,10 +233,15 @@ class _ChatState extends State<Chat> {
     return Row(
       mainAxisAlignment: sentMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
-        shouldHavePicture ? CircleAvatar(
-          radius: 17,
-          backgroundColor: Colors.transparent,
-          backgroundImage: FileImage(picture),
+        shouldHavePicture ? GestureDetector(
+          onTap: () async {
+            await Navigator.pushNamed(context, RiderAccount.route, arguments: widget.rider);
+          },
+          child: CircleAvatar(
+            radius: 17,
+            backgroundColor: Colors.transparent,
+            backgroundImage: FileImage(picture),
+          ),
         ):
         Container() ,
         Container(
