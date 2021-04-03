@@ -67,7 +67,8 @@ class _UberDriverState extends State<UberDriver> with WidgetsBindingObserver {
         ChangeNotifierProvider(
           create: (context) => DriverDataProvider(),
           lazy: false,
-        )
+        ),
+
       ],
       child: MaterialApp(
         theme: AppTheme.appTheme(),

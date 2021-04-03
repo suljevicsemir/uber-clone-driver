@@ -10,7 +10,7 @@ import 'package:uber_clone_driver/services/firebase/firestore/driver_data_servic
 
 class DriverDataProvider extends ChangeNotifier{
 
-  final CachedDataService _cachedService = CachedDataService();
+
   final FirestoreDriverService _firestoreService = FirestoreDriverService();
   Driver? _driver;
   bool didLoad = false;

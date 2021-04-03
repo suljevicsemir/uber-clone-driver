@@ -8,7 +8,8 @@ import 'package:uber_clone_driver/models/rider/rider.dart';
 
 class ChatProvider {
   final FirebaseFirestore _instance = FirebaseFirestore.instance;
-  final CollectionReference _usersReference = FirebaseFirestore.instance.collection('drivers');
+  final CollectionReference _driversReference = FirebaseFirestore.instance.collection('drivers');
+  final CollectionReference _userReference = FirebaseFirestore.instance.collection('users');
   final CollectionReference _chatReference = FirebaseFirestore.instance.collection('chats');
 
   final Driver driver;
@@ -29,9 +30,9 @@ class ChatProvider {
       transaction.set(_chatReference.doc(chatId).collection('messages').doc(DateTime.now().millisecondsSinceEpoch.toString()), snapshot);
     });
 
-
+    print(driver.id);
     await _instance.runTransaction((transaction) async {
-      transaction.update(_usersReference.doc( driver.id ).collection('chats').doc(chatId), {
+      transaction.update(_driversReference.doc( driver.id ).collection('chats').doc(chatId), {
         chat_list.lastMessage                 : message.message,
         chat_list.lastMessageTimestamp        : message.timestamp,
         chat_list.lastMessageSenderFirebaseId : driver.id
@@ -40,7 +41,7 @@ class ChatProvider {
 
 
     await _instance.runTransaction((transaction) async {
-      transaction.update(_usersReference.doc(rider.firebaseId).collection('chats').doc(chatId), {
+      transaction.update(_userReference.doc(rider.firebaseId).collection('chats').doc(chatId), {
         chat_list.lastMessage                 : message.message,
         chat_list.lastMessageTimestamp        : message.timestamp,
         chat_list.lastMessageSenderFirebaseId : driver.id
@@ -81,7 +82,7 @@ class ChatProvider {
 
     //chat list of current user
     _instance.runTransaction((transaction) async {
-      transaction.set( _usersReference.doc(driver.id).collection('chats').doc(chatId), {
+      transaction.set( _driversReference.doc(driver.id).collection('chats').doc(chatId), {
         chat_list.firebaseUserId              : rider.firebaseId,
         chat_list.firstName                   : rider.firstName,
         chat_list.lastName                    : rider.lastName,
@@ -94,7 +95,7 @@ class ChatProvider {
 
     //chat list of driver the user is chatting with
     _instance.runTransaction((transaction) async {
-      transaction.set(_usersReference.doc(rider.firebaseId).collection('chats').doc(chatId), {
+      transaction.set(_userReference.doc(rider.firebaseId).collection('chats').doc(chatId), {
         chat_list.firebaseUserId              : driver.id,
         chat_list.firstName                   : driver.firstName,
         chat_list.lastName                    : driver.lastName,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/models/driver/driver.dart';
 import 'package:uber_clone_driver/models/message.dart';
@@ -36,16 +37,20 @@ class _ChatState extends State<Chat> {
     super.didChangeDependencies();
     Driver? x = Provider.of<DriverDataProvider>(context, listen: false).driver;
     chatProvider = ChatProvider(driver: x!, rider: widget.rider);
+    _scrollChatToBottom();
 
   }
+
+
+
 
   _scrollChatToBottom() {
 
     if(scrollController.hasClients) {
       scrollController.animateTo(
           scrollController.position.maxScrollExtent,
-          curve: Curves.linear,
-          duration: const Duration(milliseconds: 120)
+          duration: const Duration(milliseconds: 120),
+        curve: Curves.linear
       );
     }
     else {
@@ -56,6 +61,7 @@ class _ChatState extends State<Chat> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -77,6 +83,7 @@ class _ChatState extends State<Chat> {
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance.collection('chats').doc(chatProvider.chatId).collection('messages').limit(100).snapshots(),
                 builder: (context, AsyncSnapshot snapshot)  {
+
                   if(!snapshot.hasData) {
                     return Center(
                       child: SizedBox(
@@ -93,12 +100,16 @@ class _ChatState extends State<Chat> {
                         child: Text('No messages with ' + widget.rider.firstName + ' ' + widget.rider.lastName)
                     );
                   }
+                  Timer(const Duration(milliseconds: 100), () => {
+                    _scrollChatToBottom()
+                  });
                   return Container(
                     child: ListView.builder(
                         controller: scrollController,
                         shrinkWrap: true,
                         itemCount: snapshot.data.docs.length,
                         itemBuilder: (context, index) => _buildMessage(context, Message.fromSnapshot(snapshot.data.docs[index]))
+
                     ),
                   );
                 },
@@ -193,6 +204,7 @@ class _ChatState extends State<Chat> {
 
   _buildMessage(BuildContext context, Message message ) {
     bool sentMessage = message.firebaseUserId == FirebaseAuth.instance.currentUser!.uid ? true : false;
+
     return Row(
       mainAxisAlignment: sentMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
