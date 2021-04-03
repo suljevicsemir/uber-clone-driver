@@ -34,11 +34,24 @@ class _ChatState extends State<Chat> {
   final ScrollController scrollController = ScrollController();
   late File picture;
   late String chatId;
-
+  bool hasText = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    textController.addListener(() {
+      if(textController.text.isNotEmpty) {
+        setState(() {
+          hasText = true;
+        });
+      }
+      else {
+        setState(() {
+          hasText = false;
+        });
+      }
+
+    });
     Driver? x = Provider.of<DriverDataProvider>(context, listen: false).driver;
     chatProvider = ChatProvider(driver: x!, rider: widget.rider);
     _scrollChatToBottom();
@@ -90,7 +103,7 @@ class _ChatState extends State<Chat> {
       body: Stack(
         children: [
           Positioned.fill(
-            bottom: MediaQuery.of(context).viewInsets.bottom + 96,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 65,
             child: Container(
               margin: EdgeInsets.only(top: 10),
               child: StreamBuilder(
@@ -133,7 +146,7 @@ class _ChatState extends State<Chat> {
             ),
           ),
           Positioned(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 15,
             left: 0,
             right: 0,
             child: Container(
@@ -177,35 +190,21 @@ class _ChatState extends State<Chat> {
                             ),
                           ),
                         ),
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 800),
-                          child: IconButton(
-                              splashColor: Colors.red,
-                              splashRadius: 25,
-                              padding: EdgeInsets.all(8),
-                              color: Colors.yellow,
-                              onPressed: () async{
-                                Timestamp timestamp = Timestamp.now();
-                                Message message = Message(message: textController.text, timestamp: timestamp, firebaseUserId: FirebaseAuth.instance.currentUser!.uid);
-                                textController.clear();
-                                await chatProvider.sendMessage(message);
-                                _scrollChatToBottom();
-                              },
-                              icon: Icon(Icons.send)
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                        textController.text.isNotEmpty  ?
                         IconButton(
-                          padding: EdgeInsets.all(0),
-                          onPressed: () {},
-                          icon: Icon(Icons.animation),
-                        ),
-                        IconButton(icon: Icon(Icons.ac_unit), onPressed: () {})
+                            splashColor: Colors.red,
+                            splashRadius: 25,
+                            padding: EdgeInsets.all(8),
+                            color: Colors.black87,
+                            onPressed: () async{
+                              Timestamp timestamp = Timestamp.now();
+                              Message message = Message(message: textController.text, timestamp: timestamp, firebaseUserId: FirebaseAuth.instance.currentUser!.uid);
+                              textController.clear();
+                              await chatProvider.sendMessage(message);
+                              _scrollChatToBottom();
+                            },
+                            icon: Icon(Icons.send)
+                        ) : Container()
                       ],
                     )
                   ],

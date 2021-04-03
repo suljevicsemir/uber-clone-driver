@@ -40,7 +40,7 @@ class BottomHomeBar extends StatelessWidget {
                           onTap: () {
                             Provider.of<HomeProvider>(context, listen: false).updateStatus();
                           },
-                          child: Text('Go online', style: TextStyle(color: Colors.red, fontSize: 22, fontWeight: FontWeight.w500),))
+                          child: Text('Go offline', style: TextStyle(color: Colors.red, fontSize: 22, fontWeight: FontWeight.w500),))
                       ],
                     ),
                   )
