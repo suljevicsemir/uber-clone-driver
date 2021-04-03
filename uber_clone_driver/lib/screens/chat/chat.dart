@@ -83,17 +83,20 @@ class _ChatState extends State<Chat> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         elevation: 0.0,
-        title: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 17,
-              backgroundColor: Colors.transparent,
-              backgroundImage: FileImage(picture),
-            ),
-            SizedBox(width: 10,),
-            Text(widget.rider.firstName)
-          ],
+        title: GestureDetector(
+          onTap: () async => await Navigator.pushNamed(context, RiderAccount.route, arguments: widget.rider),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 17,
+                backgroundColor: Colors.transparent,
+                backgroundImage: FileImage(picture),
+              ),
+              SizedBox(width: 10,),
+              Text(widget.rider.firstName)
+            ],
+          ),
         ),
         actions: [
 
@@ -230,22 +233,26 @@ class _ChatState extends State<Chat> {
 
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: sentMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         shouldHavePicture ? GestureDetector(
           onTap: () async {
             await Navigator.pushNamed(context, RiderAccount.route, arguments: widget.rider);
           },
-          child: CircleAvatar(
-            radius: 17,
-            backgroundColor: Colors.transparent,
-            backgroundImage: FileImage(picture),
+          child: Container(
+            margin: EdgeInsets.only(left: 5),
+            child: CircleAvatar(
+              radius: 13,
+              backgroundColor: Colors.transparent,
+              backgroundImage: FileImage(picture),
+            ),
           ),
         ):
         Container() ,
         Container(
-          padding: EdgeInsets.all(10),
-          margin: (sentMessage) ? EdgeInsets.only(right: 10, bottom: 10) : shouldHavePicture ? EdgeInsets.only(bottom: 10) :  EdgeInsets.only(left: 34 , bottom: 10),
+          padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+          margin: (sentMessage) ? EdgeInsets.only(right: 10, bottom: 10) : shouldHavePicture ? EdgeInsets.only(bottom: 10, left: 7) :  EdgeInsets.only(left: 39 , bottom: 10),
           decoration: BoxDecoration(
               color: Colors.grey[300],
               borderRadius: BorderRadius.circular(20)
