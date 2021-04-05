@@ -5,6 +5,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:flutter/material.dart';
 import 'package:uber_clone_driver/models/chat_info.dart';
 import 'package:uber_clone_driver/models/rider/rider.dart';
+import 'package:uber_clone_driver/providers/driver_data_provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/screens/chat/chat.dart';
 
@@ -28,7 +29,12 @@ class ChatListTile extends StatelessWidget {
 
 
     ElevatedButton(
-      onPressed: () async => await Navigator.pushNamed(context, Chat.route, arguments: Rider.fromChatInfo(chatInfo)),
+      onPressed: () async {
+        Map<String, dynamic> map = {};
+        map['driver'] = Provider.of<DriverDataProvider>(context, listen: false).driver;
+        map['rider'] = Rider.fromChatInfo(chatInfo);
+        await Navigator.pushNamed(context, Chat.route, arguments: map);
+      },
       style: ElevatedButton.styleFrom(
         primary: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0.0,

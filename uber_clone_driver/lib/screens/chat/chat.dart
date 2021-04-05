@@ -29,7 +29,7 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
 
-  late ChatProvider chatProvider;
+
   final TextEditingController textController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   late File picture;
@@ -53,7 +53,7 @@ class _ChatState extends State<Chat> {
 
     });
     Driver? x = Provider.of<DriverDataProvider>(context, listen: false).driver;
-    chatProvider = ChatProvider(driver: x!, rider: widget.rider);
+
     _scrollChatToBottom();
     picture = Provider.of<ProfilePicturesProvider>(context).riderProfilePictures![widget.rider.firebaseId]!;
   }
@@ -113,7 +113,7 @@ class _ChatState extends State<Chat> {
             child: Container(
               margin: EdgeInsets.only(top: 10),
               child: StreamBuilder(
-                stream: FirebaseFirestore.instance.collection('chats').doc(chatProvider.chatId).collection('messages').limit(100).snapshots(),
+                stream: FirebaseFirestore.instance.collection('chats').doc(Provider.of<ChatProvider>(context, listen: false).chatId).collection('messages').limit(100).snapshots(),
                 builder: (context, AsyncSnapshot snapshot)  {
 
                   if(!snapshot.hasData) {
@@ -127,7 +127,7 @@ class _ChatState extends State<Chat> {
                   }
                   if( snapshot.data!.docs.isEmpty) {
                     //create chat in chats collection and in users-chats
-                    chatProvider.createChat();
+                    Provider.of<ChatProvider>(context, listen: false).createChat();
                     return Center(
                         child: Text('No messages with ' + widget.rider.firstName + ' ' + widget.rider.lastName)
                     );
@@ -206,7 +206,7 @@ class _ChatState extends State<Chat> {
                               Timestamp timestamp = Timestamp.now();
                               Message message = Message(message: textController.text, timestamp: timestamp, firebaseUserId: FirebaseAuth.instance.currentUser!.uid);
                               textController.clear();
-                              await chatProvider.sendMessage(message);
+                              await Provider.of<ChatProvider>(context, listen: false).sendMessage(message);
                               _scrollChatToBottom();
                             },
                             icon: Icon(Icons.send)

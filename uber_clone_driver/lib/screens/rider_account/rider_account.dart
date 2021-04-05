@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/models/chat_info.dart';
 import 'package:uber_clone_driver/models/rider/rider.dart';
+import 'package:uber_clone_driver/providers/driver_data_provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/screens/chat/chat.dart';
 import 'package:uber_clone_driver/screens/rider_account/components/call_rider.dart';
@@ -163,7 +164,10 @@ class _RiderAccountState extends State<RiderAccount> with TickerProviderStateMix
                         borderRadius: BorderRadius.circular(20)
                     ),
                     onPressed: () async {
-                      await Navigator.pushNamed(context, Chat.route, arguments: widget.rider);
+                      Map<String, dynamic> map = {};
+                      map['driver'] = Provider.of<DriverDataProvider>(context, listen: false).driver;
+                      map['rider'] = widget.rider;
+                      await Navigator.pushNamed(context, Chat.route, arguments: map);
                     },
                     child: Text('Send message', style: TextStyle(color: Colors.white, fontSize: 16),),
                     splashColor: Colors.white,
