@@ -1,6 +1,6 @@
 
 import 'dart:async';
-
+import 'package:uber_clone_driver/components/app_utils.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 class CallRider extends StatefulWidget {
@@ -23,24 +23,6 @@ class _CallRiderState extends State<CallRider> {
     });
   }
 
-  Future<void> onTap() async {
-    changePressedValue();
-    final uri = "tel://" + widget.phoneNumber;
-    if(await canLaunch("tel://" + widget.phoneNumber)) {
-      launch(uri);
-    }
-    else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              backgroundColor: Colors.red,
-              content: Text('Problem with dialing driver number'))
-      );
-    }
-    await Future.delayed(const Duration(milliseconds: 250), () {
-
-      changePressedValue();
-    });
-  }
 
   Future<void> onLongPress() async {
     changePressedValue();
@@ -50,7 +32,13 @@ class _CallRiderState extends State<CallRider> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () async {
+        changePressedValue();
+        Timer(const Duration(milliseconds: 200), () async {
+          await app.callNumber(context, phoneNumber: widget.phoneNumber);
+          changePressedValue();
+        });
+      },
       onLongPress: onLongPress,
       child: AnimatedContainer(
           padding: EdgeInsets.only(top: 15, bottom: 15, left: 5),

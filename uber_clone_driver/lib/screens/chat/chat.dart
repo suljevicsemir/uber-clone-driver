@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'package:uber_clone_driver/components/call_number.dart';
+import 'package:uber_clone_driver/components/app_utils.dart' as app;
 import 'package:uber_clone_driver/models/driver/driver.dart';
 import 'package:uber_clone_driver/models/message.dart';
 import 'package:uber_clone_driver/models/rider/rider.dart';
@@ -99,8 +99,11 @@ class _ChatState extends State<Chat> {
           ),
         ),
         actions: [
+          IconButton(
+            onPressed: () async => await app.callNumber(context, phoneNumber: widget.rider.phoneNumber) ,
+            icon: Icon(Icons.call),
+          )
 
-          CallNumber(phoneNumber: widget.rider.phoneNumber,)
         ],
       ),
       body: Stack(

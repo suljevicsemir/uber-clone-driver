@@ -1,11 +1,10 @@
 
 
-import 'dart:io';
-
+import 'package:uber_clone_driver/components/app_utils.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uber_clone_driver/screens/get_started/sign_in.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 
 class WelcomeScreen extends StatelessWidget {
 
@@ -97,43 +96,7 @@ class WelcomeScreen extends StatelessWidget {
               ),
               Divider(height: 30, color: Colors.grey, thickness: 0.5,),
               GestureDetector(
-                onTap: () async {
-                  bool shouldLaunch = true;
-                  if(Platform.isIOS) {
-                    if(await canLaunch('https://apps.apple.com/us/app/uber-driver/id1131342792')) {
-                     await launch('https://apps.apple.com/us/app/uber-driver/id1131342792');
-                    }
-                    else shouldLaunch = false;
-                  }
-                  if(Platform.isAndroid) {
-                    if(await canLaunch('https://play.google.com/store/apps/details?id=com.ubercab.driver&hl=en_US&gl=US')) {
-                     await launch('https://play.google.com/store/apps/details?id=com.ubercab.driver&hl=en_US&gl=US');
-                    }
-                    else shouldLaunch = false;
-                  }
-
-                  if(!shouldLaunch) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        backgroundColor: Colors.red,
-                        content: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.error, size: 38,),
-                              SizedBox(width: 10,),
-                              Expanded(
-                                child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text('Problem launching the rider app!', style: TextStyle(fontSize: 38),)),
-                              ),
-                              SizedBox(width: 10,)
-                            ],
-                        ),
-                      )
-                    );
-                  }
-                },
+                onTap: () async => await app.openAppLink(context),
                 child: Container(
                     margin: EdgeInsets.only(left: 10),
                     child: Text('or Ride with Uber', style: rideStyle,)

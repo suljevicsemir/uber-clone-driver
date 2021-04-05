@@ -1,6 +1,6 @@
 
 import 'dart:async';
-
+import 'package:uber_clone_driver/components/app_utils.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 class SMSRider extends StatefulWidget {
@@ -23,42 +23,20 @@ class _SMSRiderState extends State<SMSRider> {
     });
   }
 
-  Future<void> onTap() async {
-    changePressedValue();
-    Timer(const Duration(milliseconds: 450), () async{
-      final uri = 'sms:' + widget.phoneNumber;
-      if(await canLaunch(uri)) {
-        launch(uri);
-      }
-      else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                backgroundColor: Colors.red,
-                content: Text('Problem opening messaging app'))
-        );
-      }
-
-      changePressedValue();
-    }
-    );
-  }
   Future<void> onLongPress() async {
     changePressedValue();
     Timer(const Duration(milliseconds: 450), () => changePressedValue());
-
   }
-
-
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () async {
+        changePressedValue();
+        Timer(const Duration(milliseconds: 200), () async {
+          await app.sendSMS(context, phoneNumber: widget.phoneNumber);
+        });
+      },
       onLongPress: onLongPress,
       child: AnimatedContainer(
 

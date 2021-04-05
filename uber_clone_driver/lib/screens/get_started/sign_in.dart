@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/components/authentication_wrapper.dart';
 import 'package:uber_clone_driver/firebase_response_results/sign_in.dart';
+import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/services/firebase/authentication_service.dart';
 
 class SignIn extends StatefulWidget {
@@ -160,6 +161,7 @@ class _SignINState extends State<SignIn> {
           if(key.currentState!.validate()) {
             final SignInResult credential = await Provider.of<AuthenticationService>(context, listen: false).signInWithEmail(email: emailController.text, password: passwordController.text);
             if(credential.result == SignInResults.Success) {
+              await Provider.of<ProfilePicturesProvider>(context, listen: false).loadCachedData();
               await Navigator.pushAndRemoveUntil(context,  MaterialPageRoute(builder: (context) => AuthenticationWrapper()), (_) => false);
             }
 

@@ -15,7 +15,7 @@ class DriverDataProvider extends ChangeNotifier{
   Driver? _driver;
   bool didLoad = false;
   DriverDataProvider() {
-    print('Driver data provider constructor');
+
     if(FirebaseAuth.instance.currentUser != null) {
       Timer(const Duration(seconds: 4), () {
         _loadUser();

@@ -11,7 +11,7 @@ class TopHomeBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final File? picture = Provider.of<ProfilePicturesProvider>(context, listen: false).profilePicture;
+    final File? picture = Provider.of<ProfilePicturesProvider>(context).profilePicture;
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     return Container(
