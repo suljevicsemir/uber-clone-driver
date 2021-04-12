@@ -10,10 +10,9 @@ class BottomGoButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     final double width = MediaQuery.of(context).size.width;
-    return AnimatedOpacity(
-      opacity: Provider.of<HomeProvider>(context).status ? 0 : 1,
+    return AnimatedSwitcher(
       duration: const Duration(milliseconds: 250),
-      child: Align(
+      child: Provider.of<HomeProvider>(context).status ? Container() : Align(
           alignment: Alignment.bottomCenter,
           child: Container(
             margin: EdgeInsets.only(bottom: 100),
@@ -24,7 +23,7 @@ class BottomGoButton extends StatelessWidget {
                   onTap: () async {
                     Provider.of<HomeProvider>(context, listen: false).updateStatus();
                   },
-                  splashColor: Colors.white,
+                  splashColor: Colors.transparent,
                   child: SizedBox(
                     height: height * 0.15,
                     width: height * 0.15,

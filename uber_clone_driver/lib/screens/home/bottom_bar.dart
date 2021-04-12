@@ -26,7 +26,8 @@ class BottomHomeBar extends StatelessWidget {
             children: [
               Container(
                   margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.04),
-                  child: Icon(Icons.keyboard_arrow_up_outlined, size: 40,)),
+                  child: const Icon(Icons.keyboard_arrow_up_outlined, size: 40,)
+              ),
               //Spacer(),
               Expanded(
                 child: FittedBox(

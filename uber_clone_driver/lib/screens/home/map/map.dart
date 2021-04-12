@@ -9,6 +9,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
@@ -25,6 +26,9 @@ class _HomeMapState extends State<HomeMap> {
   Location tracker = Location();
   LocationData? lastLocation;
   Uint8List? imageData;
+
+
+
 
   Marker? marker;
 
@@ -49,6 +53,34 @@ class _HomeMapState extends State<HomeMap> {
     super.initState();
     getCurrentLocation();
     getIcon();
+
+    tracker.onLocationChanged.listen((LocationData? data) async{
+      if( data == null || lastLocation == null)
+        return;
+
+      if(geolocator.Geolocator.distanceBetween(lastLocation!.latitude!, lastLocation!.longitude!, data.latitude!, data.longitude!) < 5)
+        return;
+
+      lastLocation = data;
+      await mapController.future.then((GoogleMapController controller) async {
+        if(data.longitude == null || data.latitude == null)
+          return;
+        double zoomLevel = await controller.getZoomLevel();
+        controller.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+            bearing: 0,
+            target: LatLng(data.latitude!, data.longitude!),
+            tilt: 0,
+            zoom: zoomLevel
+          )
+        ));
+        updateMarker(data);
+      });
+
+
+    });
+
+
   }
 
 
