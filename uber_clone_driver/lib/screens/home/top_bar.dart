@@ -15,7 +15,7 @@ class TopHomeBar extends StatelessWidget {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
     return Container(
-      margin: EdgeInsets.only(top: 10, left: 10, right: 10),
+      margin: EdgeInsets.only(top: 40, left: 10, right: 10),
       child: Align(
         alignment: Alignment.topCenter,
         child: Row(
