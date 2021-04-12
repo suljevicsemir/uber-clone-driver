@@ -22,13 +22,13 @@ class ProfilePicturesProvider extends ChangeNotifier {
     if(FirebaseAuth.instance.currentUser != null) {
       loadCachedData();
     }
-    notifyListeners();
+    //notifyListeners();
   }
 
   Future<void> loadCachedData() async {
-    _loadProfilePicture();
-    _loadRidersPictures();
-    //notifyListeners();
+    await _loadProfilePicture();
+    await _loadRidersPictures();
+    notifyListeners();
   }
 
   Future<void> _loadProfilePicture() async {
@@ -37,12 +37,12 @@ class ProfilePicturesProvider extends ChangeNotifier {
       Uint8List list = (await storageService.getCurrentDriverPicture())!;
       _profilePicture = await tempDirectoryService.storeDriverPicture(list);
     }
-    notifyListeners();
+    //notifyListeners();
   }
 
   Future<void> _loadRidersPictures() async{
     riderProfilePictures = await tempDirectoryService.loadRidersPictures();
-    notifyListeners();
+    //notifyListeners();
   }
 
   Future<void> getList(List<String> riderIds) async {
