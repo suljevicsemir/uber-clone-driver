@@ -12,6 +12,8 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
+import 'package:uber_clone_driver/providers/home_provider.dart';
 
 class HomeMap extends StatefulWidget {
   @override
@@ -26,10 +28,6 @@ class _HomeMapState extends State<HomeMap> {
   Location tracker = Location();
   LocationData? lastLocation;
   Uint8List? imageData;
-
-
-
-
   Marker? marker;
 
   Future<void> getCurrentLocation() async{
@@ -42,45 +40,7 @@ class _HomeMapState extends State<HomeMap> {
       );
       lastLocation = data;
     });
-
     updateMarker(data);
-
-  }
-
-
-  @override
-  void initState() {
-    super.initState();
-    getCurrentLocation();
-    getIcon();
-
-    tracker.onLocationChanged.listen((LocationData? data) async{
-      if( data == null || lastLocation == null)
-        return;
-
-      if(geolocator.Geolocator.distanceBetween(lastLocation!.latitude!, lastLocation!.longitude!, data.latitude!, data.longitude!) < 5)
-        return;
-
-      lastLocation = data;
-      await mapController.future.then((GoogleMapController controller) async {
-        if(data.longitude == null || data.latitude == null)
-          return;
-        double zoomLevel = await controller.getZoomLevel();
-        controller.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(
-            bearing: 0,
-            target: LatLng(data.latitude!, data.longitude!),
-            tilt: 0,
-            zoom: zoomLevel
-          )
-        ));
-        updateMarker(data);
-      });
-
-
-    });
-
-
   }
 
 
@@ -100,27 +60,63 @@ class _HomeMapState extends State<HomeMap> {
     });
   }
 
-  BitmapDescriptor? locationIcon;
 
-  Future<void> getIcon() async {
-
-  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
+    tracker.onLocationChanged.listen((LocationData? data) async{
+      if( data == null || lastLocation == null)
+        return;
+
+      if(geolocator.Geolocator.distanceBetween(lastLocation!.latitude!, lastLocation!.longitude!, data.latitude!, data.longitude!) < 5)
+        return;
+      //Provider.of<HomeProvider>(context, listen: false).updateLocation(LatLng(data.latitude!, data.longitude!));
+      lastLocation = data;
+      await mapController.future.then((GoogleMapController controller) async {
+        if(data.longitude == null || data.latitude == null)
+          return;
+        double zoomLevel = await controller.getZoomLevel();
+        controller.animateCamera(CameraUpdate.newCameraPosition(
+            CameraPosition(
+                bearing: 0,
+                target: LatLng(data.latitude!, data.longitude!),
+                tilt: 0,
+                zoom: zoomLevel
+            )
+        ));
+        updateMarker(data);
+      });
+
+
+    });
+
+
+
+
     SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async{
-      String value = await DefaultAssetBundle.of(context).loadString('assets/map/style.json');
+      String mapValue = await DefaultAssetBundle.of(context).loadString('assets/map/style.json');
       ByteData byteData = await DefaultAssetBundle.of(context).load('assets/images/location.png');
       ui.Codec codec = await ui.instantiateImageCodec(byteData.buffer.asUint8List(), targetWidth: 60, targetHeight: 120);
       ui.FrameInfo fi = await codec.getNextFrame();
 
-      Uint8List list = (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+      Uint8List list =  (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
+
+      fi.image.toByteData(format: ui.ImageByteFormat.png).then((ByteData? byteData) {
+
+        setState(() {
+          imageData = byteData!.buffer.asUint8List();
+        });
+        getCurrentLocation();
+      });
+
       setState(() {
-        mapStyle = value;
-        imageData = list;
+        mapStyle = mapValue;
+
       });
     });
+
   }
 
   @override
@@ -130,6 +126,7 @@ class _HomeMapState extends State<HomeMap> {
       return Container();
 
     return GoogleMap(
+      //onTap: (LatLng latLng) async => await Provider.of<HomeProvider>(context, listen: false).updateLocation(latLng),
       initialCameraPosition: initialCameraPosition!,
       onMapCreated: (GoogleMapController controller) async{
           controller.setMapStyle(mapStyle);

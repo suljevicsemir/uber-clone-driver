@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/components/authentication_wrapper.dart';
 import 'package:uber_clone_driver/components/uber_router.dart';
 import 'package:uber_clone_driver/providers/driver_data_provider.dart';
+import 'package:uber_clone_driver/providers/internet_connectivity_provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/services/firebase/authentication_service.dart';
 import 'package:uber_clone_driver/theme/theme.dart';
@@ -49,6 +50,10 @@ class _UberDriverState extends State<UberDriver> with WidgetsBindingObserver {
           create: (context) => DriverDataProvider(),
           lazy: false,
         ),
+        ChangeNotifierProvider(
+          create: (context) => ConnectivityProvider(),
+          lazy: false,
+        )
 
       ],
       child: MaterialApp(

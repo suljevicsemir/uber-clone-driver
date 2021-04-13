@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:uber_clone_driver/components/connectivity_notifier.dart';
+
+import 'package:uber_clone_driver/providers/internet_connectivity_provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/screens/home/bottom_bar.dart';
 import 'package:uber_clone_driver/screens/home/bottom_go_button.dart';
@@ -34,6 +37,7 @@ class _HomeState extends State<Home> {
         child: CircularProgressIndicator(),
       );
     }
+
     return Scaffold(
       key: globalKey,
       //extendBodyBehindAppBar: true,
@@ -50,27 +54,12 @@ class _HomeState extends State<Home> {
               TopHomeBar(),
               BottomHomeBar(),
               BottomGoButton(),
-              /*  Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 100),
-                  child: ElevatedButton(
-                    onPressed: () async =>await Provider.of<ProfilePicturesProvider>(context, listen: false).deleteRiderPictures(),
-                    child: Text('Delete rider pictures'),
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 100),
-                  child: ElevatedButton(
-                    onPressed: () async =>await Provider.of<ProfilePicturesProvider>(context, listen: false).deleteDriverPicture(),
-                    child: Text('Delete driver picture'),
-                  ),
-                ),
-              )*/
-
+              Positioned(
+                top: 100,
+                left: 0,
+                right: 0,
+                child: ConnectivityNotifier()
+              )
             ]
           ),
         ),
