@@ -15,25 +15,42 @@ class HomeProvider extends ChangeNotifier {
   bool _status = false;
 
 
-  void updateStatus() {
+  Future<void> updateStatus() async{
     _status = !_status;
+    try {
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        transaction.update(FirebaseFirestore.instance.collection('driver_locations').doc(FirebaseAuth.instance.currentUser!.uid), {
+          'status' : _status
+        });
+      });
+    }
+    on TimeoutException catch(err) {
+      print('Timeout occured');
+      print(err.toString());
+    }
+    catch (err) {
+      print('an error occured');
+      print(err.toString());
+    }
     notifyListeners();
   }
 
 
-  Future<void> updateLocation(LatLng data) async {
-
+  Future<void> updateLocation(LocationData? data) async {
+    if(data == null)
+      return;
     ConnectivityResult connectivityResult = await (Connectivity().checkConnectivity());
     if( connectivityResult == ConnectivityResult.none) {
       print('Nemas konekcije role');
       return;
     }
     print('ide upis ');
-    GeoPoint geoPoint = GeoPoint(data.latitude, data.longitude);
+    GeoPoint geoPoint = GeoPoint(data.latitude!, data.longitude!);
     try {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
-        transaction.update(FirebaseFirestore.instance.collection('drivers').doc(FirebaseAuth.instance.currentUser!.uid), {
-            'location' : geoPoint
+        transaction.update(FirebaseFirestore.instance.collection('driver_locations').doc(FirebaseAuth.instance.currentUser!.uid), {
+            'location' : geoPoint,
+            'heading' : data.heading
         });
       });
     }

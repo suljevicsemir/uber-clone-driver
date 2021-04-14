@@ -21,7 +21,7 @@ class BottomGoButton extends StatelessWidget {
                 color: const Color(0xff3440c1),
                 child: InkWell(
                   onTap: () async {
-                    Provider.of<HomeProvider>(context, listen: false).updateStatus();
+                   await Provider.of<HomeProvider>(context, listen: false).updateStatus();
                   },
                   splashColor: Colors.transparent,
                   child: SizedBox(
