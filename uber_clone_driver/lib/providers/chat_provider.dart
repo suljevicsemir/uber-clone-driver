@@ -85,9 +85,9 @@ class ChatProvider {
         chat_list.firebaseUserId              : rider.firebaseId,
         chat_list.firstName                   : rider.firstName,
         chat_list.lastName                    : rider.lastName,
-        chat_list.lastMessage                 : '',
-        chat_list.lastMessageTimestamp        : null,
-        chat_list.lastMessageSenderFirebaseId : null,
+        //chat_list.lastMessage                 : '',
+        //chat_list.lastMessageTimestamp        : null,
+        //chat_list.lastMessageSenderFirebaseId : null,
         chat_list.phoneNumber                 : rider.phoneNumber
       });
     });
@@ -98,9 +98,9 @@ class ChatProvider {
         chat_list.firebaseUserId              : driver.id,
         chat_list.firstName                   : driver.firstName,
         chat_list.lastName                    : driver.lastName,
-        chat_list.lastMessage                 : '',
-        chat_list.lastMessageTimestamp        : null,
-        chat_list.lastMessageSenderFirebaseId : null,
+        //chat_list.lastMessage                 : '',
+        //chat_list.lastMessageTimestamp        : null,
+        //chat_list.lastMessageSenderFirebaseId : null,
         chat_list.phoneNumber                 : driver.phoneNumber
       });
     });

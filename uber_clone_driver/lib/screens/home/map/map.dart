@@ -31,8 +31,11 @@ class _HomeMapState extends State<HomeMap> {
   Marker? marker;
 
   Future<void> getCurrentLocation() async{
+    print('uso u funkciju');
     await tracker.changeSettings(accuracy: LocationAccuracy.powerSave);
+    print('promijenio postavke');
     LocationData data = await tracker.getLocation();
+    print('dofatio lokaciju');
     setState(() {
       initialCameraPosition = CameraPosition(
         target: LatLng(data.latitude!, data.longitude!),
@@ -75,6 +78,9 @@ class _HomeMapState extends State<HomeMap> {
       Uint8List list =  (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
 
 
+
+
+
       setState(() {
         imageData = list;
         mapStyle = mapValue;
@@ -84,6 +90,7 @@ class _HomeMapState extends State<HomeMap> {
 
 
       x = tracker.onLocationChanged.listen((LocationData? data) async{
+
         if( data == null || lastLocation == null || data.latitude == null || data.longitude == null)
           return;
 
@@ -174,6 +181,7 @@ class _HomeMapState extends State<HomeMap> {
       return Container();
 
     return GoogleMap(
+
       //onTap: (LatLng latLng) async => await Provider.of<HomeProvider>(context, listen: false).updateLocation(latLng),
       initialCameraPosition: initialCameraPosition!,
       onMapCreated: (GoogleMapController controller) async{
