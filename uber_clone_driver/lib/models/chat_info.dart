@@ -22,5 +22,5 @@ class ChatInfo {
         firebaseUserId              = snapshot[fields.firebaseUserId],
         firstName                   = snapshot[fields.firstName],
         lastName                    = snapshot[fields.lastName],
-        phoneNumber                 = snapshot[fields.phoneNumber];
+        phoneNumber                 = 'xx';
 }

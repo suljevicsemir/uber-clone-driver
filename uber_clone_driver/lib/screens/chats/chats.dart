@@ -36,6 +36,7 @@ class _ChatsState extends State<Chats> {
           child: StreamBuilder(
             stream: FirebaseFirestore.instance.collection('drivers').doc(FirebaseAuth.instance.currentUser!.uid).collection('chats').orderBy('lastMessageTimestamp', descending: true).snapshots(),
             builder: (context, AsyncSnapshot snapshot) {
+
               if(snapshot.hasError)
                 return Text('There was an error');
               if(!snapshot.hasData) {
@@ -61,6 +62,7 @@ class _ChatsState extends State<Chats> {
 
               for(int i = 0; i < snapshot.data.docs.length; i++) {
                 String id = snapshot.data.docs[i].get('firebaseUserId');
+                print(id);
                 if(Provider.of<ProfilePicturesProvider>(context, listen: false).riderProfilePictures![id] == null) {
                   riderIds.add(id);
                 }
@@ -71,6 +73,7 @@ class _ChatsState extends State<Chats> {
                   await Provider.of<ProfilePicturesProvider>(context, listen: false).getList(riderIds);
                 });
               }
+
 
 
               return Container(

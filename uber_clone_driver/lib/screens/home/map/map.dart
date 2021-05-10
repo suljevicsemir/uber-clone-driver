@@ -32,7 +32,7 @@ class _HomeMapState extends State<HomeMap> {
 
   Future<void> getCurrentLocation() async{
     print('uso u funkciju');
-    await tracker.changeSettings(accuracy: LocationAccuracy.powerSave);
+    await tracker.changeSettings(accuracy: LocationAccuracy.high);
     print('promijenio postavke');
     LocationData data = await tracker.getLocation();
     print('dofatio lokaciju');

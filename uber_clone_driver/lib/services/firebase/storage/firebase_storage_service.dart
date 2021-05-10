@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -18,6 +19,13 @@ class FirebaseStorageService {
       TaskSnapshot? task = await storageReference.child("images/drivers/${FirebaseAuth.instance.currentUser!.uid}").putFile(file);
       if(task.state == TaskState.success) {
         print('Profile picture updated');
+        String url = await task.ref.getDownloadURL();
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+          transaction.update(FirebaseFirestore.instance.collection('drivers').doc(FirebaseAuth.instance.currentUser!.uid), {
+            'profilePictureUrl' : url,
+            'profilePictureTimestamp' : Timestamp.now()
+          });
+        });
       }
       return task;
     }
