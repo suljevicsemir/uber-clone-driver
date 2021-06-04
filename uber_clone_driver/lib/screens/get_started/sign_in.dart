@@ -159,6 +159,7 @@ class _SignINState extends State<SignIn> {
         child: Icon( Icons.arrow_forward_rounded),
         onPressed: () async {
           if(key.currentState!.validate()) {
+           // await Provider.of<AuthenticationService>(context, listen: false).createAccount(email: emailController.text, password: passwordController.text);
             final SignInResult credential = await Provider.of<AuthenticationService>(context, listen: false).signInWithEmail(email: emailController.text, password: passwordController.text);
             if(credential.result == SignInResults.Success) {
               await Provider.of<ProfilePicturesProvider>(context, listen: false).loadCachedData();

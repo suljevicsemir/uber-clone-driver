@@ -8,20 +8,23 @@ class Rider {
     firstName,
     lastName,
     phoneNumber,
-    firebaseId;
+    firebaseId,
+    profilePictureUrl;
 
 
     Rider.fromSnapshot(DocumentSnapshot snapshot) :
       firstName = snapshot.get(fields.firstName),
       lastName = snapshot.get(fields.lastName),
-      phoneNumber = snapshot.get(fields.phoneNumber),
-      firebaseId = snapshot.id;
+      phoneNumber = 'fake',
+      firebaseId = snapshot.id,
+      profilePictureUrl = snapshot.get("profilePictureUrl");
 
     Rider.fromChatInfo(ChatInfo chatInfo):
       firstName   = chatInfo.firstName,
       lastName    = chatInfo.lastName,
       phoneNumber = chatInfo.phoneNumber,
-      firebaseId  = chatInfo.firebaseUserId;
+      firebaseId  = chatInfo.firebaseUserId,
+      profilePictureUrl = "irrelevant";
 
 
 

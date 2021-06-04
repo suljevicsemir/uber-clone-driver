@@ -9,7 +9,6 @@ import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/services/firebase/authentication_service.dart';
 import 'package:uber_clone_driver/theme/theme.dart';
 
-
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -27,9 +26,7 @@ class _UberDriverState extends State<UberDriver> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addObserver(this);
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +67,7 @@ class _UberDriverState extends State<UberDriver> with WidgetsBindingObserver {
     super.didChangeDependencies();
     if(state == AppLifecycleState.paused) {
       print('app is paused');
+
     }
     if(state == AppLifecycleState.detached) {
       print('app is detached');

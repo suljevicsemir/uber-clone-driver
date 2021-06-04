@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
+import 'package:uber_clone_driver/services/firebase/storage/firebase_storage_service.dart';
 
 
 // Top row of home screen
@@ -52,10 +53,17 @@ class TopHomeBar extends StatelessWidget {
             ),
             Spacer(),
             picture == null ?
-            CircleAvatar(
-              radius: 25,
-              backgroundColor: Colors.transparent,
-              backgroundImage: AssetImage('assets/images/person_avatar.png'),
+            GestureDetector(
+              onTap: () async {
+                File? picture = await Provider.of<ProfilePicturesProvider>(context, listen: false).pickImageFromGallery();
+                FirebaseStorageService service = FirebaseStorageService();
+                service.uploadPictureFromFile(picture!);
+              },
+              child: CircleAvatar(
+                radius: 25,
+                backgroundColor: Colors.transparent,
+                backgroundImage: AssetImage('assets/images/person_avatar.png'),
+              ),
             ) :
             GestureDetector(
               onTap: () async {
