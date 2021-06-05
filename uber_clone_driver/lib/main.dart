@@ -64,7 +64,7 @@ class _UberDriverState extends State<UberDriver> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeDependencies();
+   // super.didChangeDependencies();
     if(state == AppLifecycleState.paused) {
       print('app is paused');
 

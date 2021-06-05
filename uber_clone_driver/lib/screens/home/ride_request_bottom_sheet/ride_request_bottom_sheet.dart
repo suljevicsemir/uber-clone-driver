@@ -76,9 +76,6 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
                         DateTime now = DateTime.now().add(const Duration(minutes: 20));
                         Timestamp timestamp = Timestamp.fromDate(now);
 
-
-
-
                         await FirebaseFirestore.instance
                             .collection('ride_requests')
                             .doc(widget.rideRequestId)
@@ -86,7 +83,6 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
                               'answeredBy' : FirebaseAuth.instance.currentUser!.uid,
                               'answeredFrom' : location,
                               'expectedArrival' : timestamp
-
                             });
                       },
                       child: Text('Answer ride request', style: TextStyle(fontSize: 24),),

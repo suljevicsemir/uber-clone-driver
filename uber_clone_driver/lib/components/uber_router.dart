@@ -7,6 +7,7 @@ import 'package:uber_clone_driver/providers/chat_provider.dart';
 import 'package:uber_clone_driver/screens/export.dart';
 import 'package:uber_clone_driver/screens/get_started/sign_in.dart';
 import 'package:uber_clone_driver/screens/get_started/welcome_screen.dart';
+import 'package:uber_clone_driver/screens/go_to_rider/go_to_rider.dart';
 
 
 class UberRouter {
@@ -46,6 +47,11 @@ class UberRouter {
       case RiderAccount.route:
         return MaterialPageRoute(
             builder: (_) => RiderAccount(rider: settings.arguments as Rider)
+        );
+
+      case GoToRider.route:
+        return MaterialPageRoute(
+          builder: (_) => GoToRider(mapStyle: settings.arguments as String , imageData: null, destination: null, origin: null)
         );
 
       default:

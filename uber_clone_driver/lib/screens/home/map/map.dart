@@ -15,6 +15,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/providers/home_provider.dart';
+import 'package:uber_clone_driver/screens/go_to_rider/go_to_rider.dart';
 import 'package:uber_clone_driver/screens/home/ride_request_bottom_sheet/ride_request_bottom_sheet.dart';
 
 class HomeMap extends StatefulWidget {
@@ -22,7 +23,7 @@ class HomeMap extends StatefulWidget {
   _HomeMapState createState() => _HomeMapState();
 }
 
-class _HomeMapState extends State<HomeMap> {
+class _HomeMapState extends State<HomeMap> with WidgetsBindingObserver{
 
   Completer<GoogleMapController> mapController = Completer();
   String? mapStyle;
@@ -41,6 +42,7 @@ class _HomeMapState extends State<HomeMap> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance!.addObserver(this);
 
     Timer.periodic(const Duration(minutes: 1), (timer) {
       setState(() {
@@ -173,7 +175,6 @@ class _HomeMapState extends State<HomeMap> {
     updateMarker(data);
   }
 
-
   void updateMarker(LocationData data) {
     LatLng latLng = LatLng(data.latitude!, data.longitude!);
     if(!this.mounted)
@@ -195,9 +196,6 @@ class _HomeMapState extends State<HomeMap> {
 
     });
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -232,6 +230,10 @@ class _HomeMapState extends State<HomeMap> {
 
   print('SET SIZE: ' + markers.length.toString());
     return GoogleMap(
+      onTap: (LatLng latLng) async {
+
+        Navigator.pushNamed(context, GoToRider.route, arguments: mapStyle);
+      },
       initialCameraPosition: initialCameraPosition!,
       onMapCreated: (GoogleMapController controller) async{
           controller.setMapStyle(mapStyle);
@@ -239,7 +241,21 @@ class _HomeMapState extends State<HomeMap> {
       },
       zoomControlsEnabled: false,
       markers: markers,
+
     );
+  }
+
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if(state == AppLifecycleState.paused || state == AppLifecycleState.inactive || state == AppLifecycleState.detached) {
+      x.pause();
+      requests.pause();
+    }
+    if( state == AppLifecycleState.resumed) {
+      x.resume();
+      requests.resume();
+    }
   }
 
   @override
