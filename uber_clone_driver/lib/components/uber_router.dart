@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/components/authentication_wrapper.dart';
 import 'package:uber_clone_driver/models/rider/rider.dart';
@@ -50,8 +51,12 @@ class UberRouter {
         );
 
       case GoToRider.route:
+
+        Map<String, dynamic> map = settings.arguments as Map<String, dynamic>;
+        LatLng location = LatLng(map['location'].latitude, map['location'].longitude);
+        LatLng destination = LatLng(map['destination'].latitude, map['destination'].longitude);
         return MaterialPageRoute(
-          builder: (_) => GoToRider(mapStyle: settings.arguments as String , imageData: null, destination: null, origin: null)
+          builder: (_) => GoToRider(origin: location, destination: destination,)
         );
 
       default:

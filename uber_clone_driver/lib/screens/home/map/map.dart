@@ -14,6 +14,7 @@ import 'package:geolocator/geolocator.dart' as geolocator;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:uber_clone_driver/models/ride_request.dart';
 import 'package:uber_clone_driver/providers/home_provider.dart';
 import 'package:uber_clone_driver/screens/go_to_rider/go_to_rider.dart';
 import 'package:uber_clone_driver/screens/home/ride_request_bottom_sheet/ride_request_bottom_sheet.dart';
@@ -79,8 +80,9 @@ class _HomeMapState extends State<HomeMap> with WidgetsBindingObserver{
             draggable: false,
             zIndex: 2,
             icon: BitmapDescriptor.defaultMarker,
-            onTap: () {
-              showModalBottomSheet(context: context, builder: (context) => RideRequestBottomSheet(riderId: snapshot.get("riderId"), rideRequestId: snapshot.id,));
+            onTap: () async{
+              RideRequest rideRequest = RideRequest.fromSnapshot(snapshot);
+              showModalBottomSheet(context: context, builder: (context) => RideRequestBottomSheet(rideRequest: rideRequest));
             }
           );
           tempMarkers.add(riderMarker);
@@ -230,10 +232,10 @@ class _HomeMapState extends State<HomeMap> with WidgetsBindingObserver{
 
   print('SET SIZE: ' + markers.length.toString());
     return GoogleMap(
-      onTap: (LatLng latLng) async {
+      /*onTap: (LatLng latLng) async {
 
         Navigator.pushNamed(context, GoToRider.route, arguments: mapStyle);
-      },
+      },*/
       initialCameraPosition: initialCameraPosition!,
       onMapCreated: (GoogleMapController controller) async{
           controller.setMapStyle(mapStyle);

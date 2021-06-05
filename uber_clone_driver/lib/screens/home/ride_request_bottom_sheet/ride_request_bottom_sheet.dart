@@ -3,14 +3,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:uber_clone_driver/models/ride_request.dart';
 import 'package:uber_clone_driver/models/rider/rider.dart';
+import 'package:uber_clone_driver/screens/go_to_rider/go_to_rider.dart';
 
 class RideRequestBottomSheet extends StatefulWidget {
 
-  final String riderId, rideRequestId;
 
-  RideRequestBottomSheet({required this.riderId, required this.rideRequestId});
+  final RideRequest rideRequest;
+
+  RideRequestBottomSheet({required this.rideRequest});
 
 
   @override
@@ -26,15 +30,12 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
   @override
   void initState() {
     super.initState();
-    FirebaseFirestore.instance.collection('users').doc(widget.riderId).get().then((DocumentSnapshot snapshot) {
+    FirebaseFirestore.instance.collection('users').doc(widget.rideRequest.riderId).get().then((DocumentSnapshot snapshot) {
       setState(() {
         rider = Rider.fromSnapshot(snapshot);
       });
     });
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -69,21 +70,26 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
                         padding: EdgeInsets.symmetric(vertical: 15)
                       ),
                       onPressed: () async {
-
-
                         LocationData data = await tracker.getLocation();
-                        GeoPoint location = GeoPoint(data.latitude!, data.longitude!);
+                        /*GeoPoint location = GeoPoint(data.latitude!, data.longitude!);
                         DateTime now = DateTime.now().add(const Duration(minutes: 20));
-                        Timestamp timestamp = Timestamp.fromDate(now);
-
-                        await FirebaseFirestore.instance
+                        Timestamp timestamp = Timestamp.fromDate(now);*/
+                        /*await FirebaseFirestore.instance
                             .collection('ride_requests')
                             .doc(widget.rideRequestId)
                             .update({
                               'answeredBy' : FirebaseAuth.instance.currentUser!.uid,
                               'answeredFrom' : location,
                               'expectedArrival' : timestamp
-                            });
+                            });*/
+
+                       Map<String, dynamic> path = {
+                          'location' : LatLng(data.latitude!, data.longitude!),
+                          'destination' : widget.rideRequest.destination
+                       };
+
+                        Future.delayed(const Duration(milliseconds: 300), () => Navigator.pushNamed(context, GoToRider.route, arguments: path));
+
                       },
                       child: Text('Answer ride request', style: TextStyle(fontSize: 24),),
                     ),
@@ -91,8 +97,6 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
                 ],
               ),
             )
-
-
           ],
         ),
       ),
