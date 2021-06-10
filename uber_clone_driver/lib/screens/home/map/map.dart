@@ -96,6 +96,7 @@ class _HomeMapState extends State<HomeMap> with WidgetsBindingObserver{
   }
 
   late StreamSubscription<LocationData> x;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -230,12 +231,8 @@ class _HomeMapState extends State<HomeMap> with WidgetsBindingObserver{
         ),
       );
 
-  print('SET SIZE: ' + markers.length.toString());
-    return GoogleMap(
-      /*onTap: (LatLng latLng) async {
 
-        Navigator.pushNamed(context, GoToRider.route, arguments: mapStyle);
-      },*/
+    return GoogleMap(
       initialCameraPosition: initialCameraPosition!,
       onMapCreated: (GoogleMapController controller) async{
           controller.setMapStyle(mapStyle);
@@ -259,6 +256,8 @@ class _HomeMapState extends State<HomeMap> with WidgetsBindingObserver{
       requests.resume();
     }
   }
+
+
 
   @override
   void dispose() {

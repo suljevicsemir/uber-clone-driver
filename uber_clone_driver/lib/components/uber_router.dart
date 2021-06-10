@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/components/authentication_wrapper.dart';
+import 'package:uber_clone_driver/models/ride_request.dart';
 import 'package:uber_clone_driver/models/rider/rider.dart';
 import 'package:uber_clone_driver/providers/chat_provider.dart';
 import 'package:uber_clone_driver/screens/export.dart';
@@ -55,8 +56,9 @@ class UberRouter {
         Map<String, dynamic> map = settings.arguments as Map<String, dynamic>;
         LatLng location = LatLng(map['location'].latitude, map['location'].longitude);
         LatLng destination = LatLng(map['destination'].latitude, map['destination'].longitude);
+        RideRequest rideRequest = map['rideRequest'];
         return MaterialPageRoute(
-          builder: (_) => GoToRider(origin: location, destination: destination,)
+          builder: (_) => GoToRider(origin: location, destination: destination, rideRequest: rideRequest,)
         );
 
       default:
