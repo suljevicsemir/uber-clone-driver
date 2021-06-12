@@ -15,6 +15,7 @@ class HomeProvider extends ChangeNotifier {
   bool _status = false;
 
 
+
   Future<void> updateStatus() async{
     _status = !_status;
     try {
@@ -25,11 +26,11 @@ class HomeProvider extends ChangeNotifier {
       });
     }
     on TimeoutException catch(err) {
-      print('Timeout occured');
+      print('Timeout occurred');
       print(err.toString());
     }
     catch (err) {
-      print('an error occured');
+      print('an error occurred');
       print(err.toString());
     }
     notifyListeners();

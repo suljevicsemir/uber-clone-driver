@@ -16,7 +16,7 @@ class AuthenticationWrapper extends StatelessWidget {
     final User? user = Provider.of<User?>(context);
     if( user == null) return WelcomeScreen();
     return ChangeNotifierProvider(
-      create: (context) => HomeProvider(),
+      create: (_) => HomeProvider(),
       child: Home(),
     );
   }
