@@ -54,11 +54,13 @@ class UberRouter {
       case GoToRider.route:
 
         Map<String, dynamic> map = settings.arguments as Map<String, dynamic>;
-        LatLng location = LatLng(map['location'].latitude, map['location'].longitude);
-        LatLng destination = LatLng(map['destination'].latitude, map['destination'].longitude);
+        LatLng origin = map['location'] as LatLng;
         RideRequest rideRequest = map['rideRequest'];
+
         return MaterialPageRoute(
-          builder: (_) => GoToRider(origin: location, destination: destination, rideRequest: rideRequest,)
+          builder: (_) => GoToRider(
+            origin: origin,
+            rideRequest: rideRequest,)
         );
 
       default:

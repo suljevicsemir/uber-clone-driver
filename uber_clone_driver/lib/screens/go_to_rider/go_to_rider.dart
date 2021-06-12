@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -18,10 +19,9 @@ class GoToRider extends StatefulWidget {
 
   final RideRequest rideRequest;
   final LatLng? origin;
-  final LatLng? destination;
+
 
   GoToRider({
-    required this.destination,
     required this.origin,
     required this.rideRequest
   });
@@ -100,8 +100,8 @@ class _GoToRiderState extends State<GoToRider> {
         return;
 
       double distance = geolocator.Geolocator.distanceBetween(
-          widget.destination!.latitude,
-          widget.destination!.longitude,
+          widget.rideRequest.destination.latitude,
+          widget.rideRequest.destination.longitude,
           data.latitude!,
           data.longitude!);
 
@@ -162,14 +162,33 @@ class _GoToRiderState extends State<GoToRider> {
 
     destination = Marker(
       markerId: MarkerId("destination"),
-      position: widget.destination!,
+      position: LatLng(widget.rideRequest.location.latitude, widget.rideRequest.location.longitude),
       rotation: 0,
       draggable: false,
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue)
     );
 
-    DirectionsRepository().getDirections(origin: widget.origin!, destination: widget.destination!).then((Directions? directions) {
+    DirectionsRepository().getDirections(
+        origin: widget.origin!,
+        destination: LatLng(widget.rideRequest.location.latitude, widget.rideRequest.location.longitude))
+        .then((Directions? directions) async{
       if( directions != null) {
+
+        LocationData data = await tracker.getLocation();
+
+
+        // notifies the rider who will pick him up
+        await FirebaseFirestore.instance
+          .collection("ride_requests")
+          .doc(widget.rideRequest.id)
+          .update({
+              'answeredBy'      : FirebaseAuth.instance.currentUser!.uid,
+              'answeredFrom'    : GeoPoint(data.latitude!, data.longitude!),
+              'expectedArrival' : directions.totalDuration,
+              'isActive'        : false
+          });
+
+
         setState(() {
 
           info = directions;
@@ -204,13 +223,15 @@ class _GoToRiderState extends State<GoToRider> {
 
   Future<void> getCurrentLocation() async {
     print('Fetching position..');
-    tracker.getLocation().then((LocationData data) async {
-      setState(() {
-        initialCameraPosition = CameraPosition(
-          target: LatLng(data.latitude!, data.longitude!),
-          zoom: 15
-        );
-      });
+
+    LocationData data = await tracker.getLocation();
+
+    setState(() {
+      initialCameraPosition = CameraPosition(
+        target: LatLng(data.latitude!, data.longitude!),
+        zoom: 15
+      );
+    });
 
       ByteData byteData = await DefaultAssetBundle.of(context).load('assets/images/location.png');
       ui.Codec codec = await ui.instantiateImageCodec(byteData.buffer.asUint8List(), targetWidth: 60, targetHeight: 120);
@@ -225,8 +246,8 @@ class _GoToRiderState extends State<GoToRider> {
           icon: BitmapDescriptor.fromBytes(list)
         );
       });
-    });
-  }
+
+}
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +256,7 @@ class _GoToRiderState extends State<GoToRider> {
       return Scaffold(
         body: Container(
           child: Center(
-            child: Text('Fetching your position...'),
+            child: Text('Fetching your position.s..'),
           ),
         ),
       );

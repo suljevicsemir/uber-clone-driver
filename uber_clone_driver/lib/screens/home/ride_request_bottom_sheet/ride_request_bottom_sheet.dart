@@ -72,28 +72,14 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
                       onPressed: () async {
                         LocationData data = await tracker.getLocation();
 
-                        GeoPoint location = GeoPoint(data.latitude!, data.longitude!);
-                        DateTime now = DateTime.now().add(const Duration(minutes: 20));
-                        Timestamp timestamp = Timestamp.fromDate(now);
-                        await FirebaseFirestore.instance
-                            .collection('ride_requests')
-                            .doc(widget.rideRequest.id)
-                            .update({
-                              'answeredBy'      : FirebaseAuth.instance.currentUser!.uid,
-                              'answeredFrom'    : location,
-                              'expectedArrival' : timestamp,
-                              'isActive'        : false
-                            });
-
-
-
                        Map<String, dynamic> path = {
                           'location' : LatLng(data.latitude!, data.longitude!),
-                          'destination' : widget.rideRequest.destination,
                           'rideRequest' : widget.rideRequest
                        };
 
-                        Future.delayed(const Duration(milliseconds: 150), () => Navigator.pushNamed(context, GoToRider.route, arguments: path));
+                        Future.delayed(const Duration(milliseconds: 100), () =>
+                            Navigator.pushNamed(context, GoToRider.route, arguments: path)
+                        );
 
                       },
                       child: Text('Answer ride request', style: TextStyle(fontSize: 24),),
