@@ -103,7 +103,7 @@ class _HomeMapState extends State<HomeMap>{
         zoom: 15
       ),
       onMapCreated: (GoogleMapController controller) async {
-          controller.setMapStyle(Provider.of<LocationProvider>(context, listen: false).mapStyle);
+          await controller.setMapStyle(Provider.of<LocationProvider>(context, listen: false).mapStyle);
           Provider.of<LocationProvider>(context, listen: false).mapController.complete(controller);
       },
       zoomControlsEnabled: false,

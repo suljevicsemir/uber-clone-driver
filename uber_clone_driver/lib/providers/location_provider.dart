@@ -51,7 +51,7 @@ class LocationProvider extends ChangeNotifier{
           anchor: Offset(0.5, 0.5),
           icon: BitmapDescriptor.fromBytes(markerImage!)
       );
-      notifyListeners();
+
       _lastLocation = locationData;
       mapController.future.then((GoogleMapController controller) async {
         double zoomLevel = await controller.getZoomLevel();

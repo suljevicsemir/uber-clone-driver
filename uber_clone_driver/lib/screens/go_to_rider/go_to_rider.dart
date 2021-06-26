@@ -11,22 +11,20 @@ import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/models/directions.dart';
 import 'package:uber_clone_driver/models/ride_request.dart';
 import 'package:uber_clone_driver/providers/driver_data_provider.dart';
+import 'package:uber_clone_driver/providers/location_provider.dart';
 import 'package:uber_clone_driver/services/directions_repository.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
-class GoToRider extends StatefulWidget {
 
+class GoToRider extends StatefulWidget {
   static const String route = '/goToRider';
 
   final RideRequest rideRequest;
   final LatLng? origin;
 
-
   GoToRider({
     required this.origin,
     required this.rideRequest
   });
-
-
 
   @override
   _GoToRiderState createState() => _GoToRiderState();
@@ -262,7 +260,7 @@ class _GoToRiderState extends State<GoToRider> {
       );
     }
 
-    if( mapStyle == null || imageData == null || marker == null || info == null) {
+    if(info == null) {
       return Scaffold(
         body: Container(
           child: Center(
@@ -277,9 +275,12 @@ class _GoToRiderState extends State<GoToRider> {
         children: [
           GoogleMap(
             zoomControlsEnabled: false,
-            initialCameraPosition: initialCameraPosition!,
+            initialCameraPosition: CameraPosition(
+              target: Provider.of<LocationProvider>(context, listen: false).lastLocation!,
+              zoom: 15
+            ),
             onMapCreated: (GoogleMapController controller) async {
-              await controller.setMapStyle(mapStyle);
+              await controller.setMapStyle(Provider.of<LocationProvider>(context, listen: false).mapStyle);
               mapController.complete(controller);
             },
             polylines: info == null ? Set.of([]) : Set.of([
@@ -290,7 +291,7 @@ class _GoToRiderState extends State<GoToRider> {
                   points: info!.polylinePoints.map((e) => LatLng(e.latitude, e.longitude)).toList()
               ),
             ]),
-            markers: Set.of([destination, marker!]),
+            markers: Set.of([destination, Provider.of<LocationProvider>(context).driverMarker!]),
 
           ),
 
