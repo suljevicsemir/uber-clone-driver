@@ -14,6 +14,7 @@ import 'package:uber_clone_driver/providers/driver_data_provider.dart';
 import 'package:uber_clone_driver/providers/location_provider.dart';
 import 'package:uber_clone_driver/services/directions_repository.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
+import 'package:uber_clone_driver/components/app_utils.dart' as app;
 
 class GoToRider extends StatefulWidget {
   static const String route = '/goToRider';
@@ -44,7 +45,7 @@ class _GoToRiderState extends State<GoToRider> {
   bool rideStarted = false;
 
   late Marker destination;
-  Marker? marker;
+
   Directions? info;
 
   StreamSubscription<LocationData>? x;
@@ -89,8 +90,15 @@ class _GoToRiderState extends State<GoToRider> {
     setState(() {
       rideStarted = true;
     });
+
+
+
+
+
     x = tracker.onLocationChanged.listen((LocationData? data) async {
 
+
+      print('radi');
       if( data == null)
         return;
 
@@ -114,38 +122,16 @@ class _GoToRiderState extends State<GoToRider> {
   }
 
   void updateDriverMarker(LocationData data) {
-    if( marker == null)
-      return;
-
-    LatLng latLng = LatLng(data.latitude! , data.longitude!);
-
-    marker = Marker(
-      markerId: MarkerId("driver"),
-      position: latLng,
-      rotation: data.heading!,
-      draggable: false,
-      //zIndex: 2,
-      flat: true,
-      icon: BitmapDescriptor.fromBytes(imageData!)
-    );
-
     mapController.future.then((GoogleMapController controller) async {
       controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: LatLng(data.latitude!, data.longitude!),
-          bearing: data.heading!,
-          tilt: 90,
-          zoom: 18
-        )
+          CameraPosition(
+              target: LatLng(data.latitude!, data.longitude!),
+              bearing: data.heading!,
+              tilt: 90,
+              zoom: 18
+          )
       ));
-      setState(() {
-
-      });
     });
-
-
-
-
   }
 
 
@@ -153,10 +139,6 @@ class _GoToRiderState extends State<GoToRider> {
   void initState() {
 
     super.initState();
-
-
-
-    getCurrentLocation();
 
     destination = Marker(
       markerId: MarkerId("destination"),
@@ -176,7 +158,7 @@ class _GoToRiderState extends State<GoToRider> {
 
 
         // notifies the rider who will pick him up
-        await FirebaseFirestore.instance
+        /*await FirebaseFirestore.instance
           .collection("ride_requests")
           .doc(widget.rideRequest.id)
           .update({
@@ -184,7 +166,7 @@ class _GoToRiderState extends State<GoToRider> {
               'answeredFrom'    : GeoPoint(data.latitude!, data.longitude!),
               'expectedArrival' : directions.totalDuration,
               'isActive'        : false
-          });
+          });*/
 
 
         setState(() {
@@ -205,60 +187,9 @@ class _GoToRiderState extends State<GoToRider> {
 
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if( isFirstRun) {
-      SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async {
-        String mapValue = await DefaultAssetBundle.of(context).loadString('assets/map/style.json');
-        setState(() {
-          isFirstRun = false;
-          mapStyle = mapValue;
-        });
-      });
-    }
-  }
-
-  Future<void> getCurrentLocation() async {
-    print('Fetching position..');
-
-    LocationData data = await tracker.getLocation();
-
-    setState(() {
-      initialCameraPosition = CameraPosition(
-        target: LatLng(data.latitude!, data.longitude!),
-        zoom: 15
-      );
-    });
-
-      ByteData byteData = await DefaultAssetBundle.of(context).load('assets/images/location.png');
-      ui.Codec codec = await ui.instantiateImageCodec(byteData.buffer.asUint8List(), targetWidth: 60, targetHeight: 120);
-      ui.FrameInfo fi = await codec.getNextFrame();
-      Uint8List list =  (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
-
-      setState(() {
-        imageData = list;
-        marker = Marker(
-          markerId: MarkerId("driver"),
-          position: LatLng(data.latitude!, data.longitude!),
-          icon: BitmapDescriptor.fromBytes(list)
-        );
-      });
-
-}
-
-  @override
   Widget build(BuildContext context) {
 
-    if( initialCameraPosition == null) {
-      return Scaffold(
-        body: Container(
-          child: Center(
-            child: Text('Fetching your position.s..'),
-          ),
-        ),
-      );
-    }
+
 
     if(info == null) {
       return Scaffold(
@@ -331,7 +262,13 @@ class _GoToRiderState extends State<GoToRider> {
                         textStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, letterSpacing: 1.0)
                       ),
                       onPressed: () async{
+                        mapController.future.then((value) => value.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+                          target: Provider.of<LocationProvider>(context, listen : false).lastLocation!,
+                          tilt: 90,
+                          zoom: 18
+                        ))));
                         startListener();
+
                       },
                       child: Text('START TRIP'),
                     ),

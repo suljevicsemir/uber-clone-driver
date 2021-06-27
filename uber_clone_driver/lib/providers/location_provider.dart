@@ -13,6 +13,8 @@ class LocationProvider extends ChangeNotifier{
   bool _driverStatus = false, _isFirstRun = true;
   Completer<GoogleMapController> mapController = Completer();
 
+  bool _isDataReady = false;
+
   late StreamSubscription x;
 
 
@@ -36,7 +38,7 @@ class LocationProvider extends ChangeNotifier{
       if( !_isFirstRun && geolocator.Geolocator.distanceBetween(locationData.latitude!, locationData.longitude!, _lastLocation!.latitude!, _lastLocation!.longitude!) < 1) {
         return;
       }
-      _isFirstRun = false;
+
       // driver is active, update driver's location
       if( _driverStatus) {
 
@@ -51,6 +53,12 @@ class LocationProvider extends ChangeNotifier{
           anchor: Offset(0.5, 0.5),
           icon: BitmapDescriptor.fromBytes(markerImage!)
       );
+
+      if( _isFirstRun ) {
+        _isDataReady = true;
+        _isFirstRun = false;
+      }
+
 
       _lastLocation = locationData;
       mapController.future.then((GoogleMapController controller) async {
@@ -84,14 +92,7 @@ class LocationProvider extends ChangeNotifier{
       _loadMarkerImage(context),
       _loadMapStyle(context)
     ]);
-
-
     _startLocationListener();
-
-
-
-
-    print('zavrsio citanje');
     notifyListeners();
   }
 
@@ -107,6 +108,9 @@ class LocationProvider extends ChangeNotifier{
     return _lastLocation == null ? null : LatLng(_lastLocation!.latitude!, _lastLocation!.longitude!);
 
   }
+
+
+  bool get isDataReady => _isDataReady;
 
   @override
   void dispose() {

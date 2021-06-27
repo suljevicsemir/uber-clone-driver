@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/components/connectivity_notifier.dart';
 
 import 'package:uber_clone_driver/providers/internet_connectivity_provider.dart';
+import 'package:uber_clone_driver/providers/location_provider.dart';
 import 'package:uber_clone_driver/providers/profile_pictures_provider.dart';
 import 'package:uber_clone_driver/screens/home/bottom_bar.dart';
 import 'package:uber_clone_driver/screens/home/bottom_go_button.dart';
@@ -37,6 +38,17 @@ class _HomeState extends State<Home> {
         child: CircularProgressIndicator(),
       );
     }
+
+    if( !Provider.of<LocationProvider>(context).isDataReady)
+
+      return Scaffold(
+        body: Container(
+          child: Center(
+            child: Text('Loading resources...'),
+          ),
+        ),
+      );
+
 
     return Scaffold(
       key: globalKey,

@@ -3,7 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:uber_clone_driver/models/ride_request.dart';
 import 'package:uber_clone_driver/providers/location_provider.dart';
+import 'package:uber_clone_driver/screens/home/ride_request_bottom_sheet/ride_request_bottom_sheet.dart';
 
 class HomeMap extends StatefulWidget {
   @override
@@ -22,7 +24,7 @@ class _HomeMapState extends State<HomeMap>{
   @override
   void initState() {
     super.initState();
-    /*requests = FirebaseFirestore.instance
+    requests = FirebaseFirestore.instance
       .collection('ride_requests')
       .where('endInterval', isGreaterThan: timestamp)
       .where('isActive', isEqualTo: true)
@@ -31,9 +33,7 @@ class _HomeMapState extends State<HomeMap>{
         print(querySnapshot.docs.length);
         List<QueryDocumentSnapshot> list = querySnapshot.docs;
 
-        Set<Marker> tempMarkers = Set<Marker>();
-        if(marker != null)
-        tempMarkers.add(marker!);
+        markers.clear();
 
         for(int i = 0; i < list.length; i++) {
           DocumentSnapshot snapshot = list[i];
@@ -52,48 +52,18 @@ class _HomeMapState extends State<HomeMap>{
               showModalBottomSheet(context: context, builder: (context) => RideRequestBottomSheet(rideRequest: rideRequest));
             }
           );
-          tempMarkers.add(riderMarker);
+          markers.add(riderMarker);
         }
         setState(() {
-          markers = tempMarkers;
         });
-    });*/
+    });
   }
 
   @override
   Widget build(BuildContext context) {
 
-    if( Provider.of<LocationProvider>(context).lastLocation == null) {
-      return Container(
-        child: Center(
-          child: Text('Initial camera position is null'),
-        ),
-      );
-    }
 
-    if( Provider.of<LocationProvider>(context).mapStyle == null) {
-      return Container(
-        child: Center(
-          child: Text('Map style is null'),
-        ),
-      );
-    }
 
-    if( Provider.of<LocationProvider>(context).markerImage == null) {
-      return Container(
-        child: Center(
-          child: Text('Marker image is null'),
-        ),
-      );
-    }
-
-    if( Provider.of<LocationProvider>(context).driverMarker == null) {
-      return Container(
-        child: Center(
-          child: Text('Driver marker is null'),
-        ),
-      );
-    }
 
     markers.add(Provider.of<LocationProvider>(context, listen: false).driverMarker!);
 

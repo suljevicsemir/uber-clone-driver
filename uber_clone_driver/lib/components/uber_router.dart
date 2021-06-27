@@ -55,7 +55,7 @@ class UberRouter {
       case GoToRider.route:
 
         Map<String, dynamic> map = settings.arguments as Map<String, dynamic>;
-        LatLng origin = map['location'] as LatLng;
+        LatLng origin = map['location'];
         RideRequest rideRequest = map['rideRequest'];
 
         return MaterialPageRoute(

@@ -5,8 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/models/ride_request.dart';
 import 'package:uber_clone_driver/models/rider/rider.dart';
+import 'package:uber_clone_driver/providers/location_provider.dart';
 import 'package:uber_clone_driver/screens/go_to_rider/go_to_rider.dart';
 
 class RideRequestBottomSheet extends StatefulWidget {
@@ -70,10 +72,8 @@ class _RideRequestBottomSheetState extends State<RideRequestBottomSheet> {
                         padding: EdgeInsets.symmetric(vertical: 15)
                       ),
                       onPressed: () async {
-                        LocationData data = await tracker.getLocation();
-
                        Map<String, dynamic> path = {
-                          'location' : LatLng(data.latitude!, data.longitude!),
+                          'location' : Provider.of<LocationProvider>(context, listen: false).lastLocation!,
                           'rideRequest' : widget.rideRequest
                        };
 
