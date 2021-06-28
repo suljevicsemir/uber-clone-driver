@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
 
   Future<void> callNumber(BuildContext context, {required String phoneNumber}) async{
@@ -118,3 +120,6 @@ import 'package:url_launcher/url_launcher.dart';
   }
 
 
+  LatLng locationToLatLng(LocationData locationData) {
+    return LatLng(locationData.latitude!, locationData.longitude!);
+  }

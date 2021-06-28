@@ -14,7 +14,8 @@ import 'package:uber_clone_driver/screens/go_to_rider/go_to_rider.dart';
 
 class UberRouter {
 
-  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+  static Route<dynamic> onGenerateRoute(BuildContext context, RouteSettings settings) {
+
     switch (settings.name) {
 
       case Account.route:
@@ -54,7 +55,7 @@ class UberRouter {
       case GoToRider.route:
 
         Map<String, dynamic> map = settings.arguments as Map<String, dynamic>;
-        LatLng origin = map['location'] as LatLng;
+        LatLng origin = map['location'];
         RideRequest rideRequest = map['rideRequest'];
 
         return MaterialPageRoute(
@@ -62,6 +63,8 @@ class UberRouter {
             origin: origin,
             rideRequest: rideRequest,)
         );
+
+
 
       default:
         return MaterialPageRoute(

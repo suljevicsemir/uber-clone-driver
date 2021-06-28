@@ -11,22 +11,22 @@ import 'package:provider/provider.dart';
 import 'package:uber_clone_driver/models/directions.dart';
 import 'package:uber_clone_driver/models/ride_request.dart';
 import 'package:uber_clone_driver/providers/driver_data_provider.dart';
+import 'package:uber_clone_driver/providers/location_provider.dart';
+import 'package:uber_clone_driver/screens/export.dart';
 import 'package:uber_clone_driver/services/directions_repository.dart';
 import 'package:geolocator/geolocator.dart' as geolocator;
-class GoToRider extends StatefulWidget {
+import 'package:uber_clone_driver/components/app_utils.dart' as app;
 
+class GoToRider extends StatefulWidget {
   static const String route = '/goToRider';
 
   final RideRequest rideRequest;
   final LatLng? origin;
 
-
   GoToRider({
     required this.origin,
     required this.rideRequest
   });
-
-
 
   @override
   _GoToRiderState createState() => _GoToRiderState();
@@ -44,18 +44,88 @@ class _GoToRiderState extends State<GoToRider> {
 
   bool isFirstRun = true;
   bool rideStarted = false;
+  bool originReached = false;
 
+  late Marker location;
   late Marker destination;
-  Marker? marker;
+
   Directions? info;
 
   StreamSubscription<LocationData>? x;
 
 
+  @override
+  void initState() {
+
+    super.initState();
+
+    location = Marker(
+        markerId: MarkerId("location"),
+        position: LatLng(widget.rideRequest.location.latitude, widget.rideRequest.location.longitude),
+        rotation: 0,
+        draggable: false,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue)
+    );
+
+    destination = Marker(
+      markerId: MarkerId("destination"),
+      position: LatLng(widget.rideRequest.destination.latitude, widget.rideRequest.destination.longitude),
+      rotation: 0,
+      draggable: false,
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueMagenta)
+    );
+
+    DirectionsRepository().getDirections(
+        origin: widget.origin!,
+        destination: LatLng(widget.rideRequest.location.latitude, widget.rideRequest.location.longitude))
+        .then((Directions? directions) async{
+      if( directions != null) {
+
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+          transaction.update(FirebaseFirestore.instance
+              .collection('ride_requests')
+              .doc(widget.rideRequest.id), {
+              'answeredBy'      : FirebaseAuth.instance.currentUser!.uid,
+              'answeredFrom'    : GeoPoint(widget.origin!.latitude, widget.origin!.longitude),
+              'expectedArrival' : directions.totalDuration,
+              'isActive'        : false
+          });
+          transaction.set(FirebaseFirestore.instance
+              .collection('drivers')
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .collection('ride_answers')
+              .doc(widget.rideRequest.id),
+              widget.rideRequest.toMap()
+          );
+
+        });
+
+        setState(() {
+
+          info = directions;
+          mapController.future.then((GoogleMapController controller) {
+            controller.animateCamera(CameraUpdate.newCameraPosition(
+                CameraPosition(
+                    target: widget.origin!,
+                    zoom: 11
+                )));
+          });
+        });
+
+      }
+
+    });
+  }
+
+
   Future<bool> notifyRider(BuildContext context, LocationData data) async {
+    setState(() {
+      originReached = true;
+    });
 
     Map<String, dynamic> map = {
-      'location' : GeoPoint(data.latitude!, data.longitude!),
+      'latitude' : data.latitude,
+      'longitude' : data.longitude,
       'firstName' : Provider.of<DriverDataProvider>(context, listen: false).driver!.firstName,
       'lastName'  : Provider.of<DriverDataProvider>(context, listen: false).driver!.lastName
     };
@@ -67,6 +137,15 @@ class _GoToRiderState extends State<GoToRider> {
         .collection('ride_notifications')
         .doc(widget.rideRequest.id)
         .set(map);
+
+    DirectionsRepository().getDirections(
+      origin: Provider.of<LocationProvider>(context, listen: false).lastLocation!,
+      destination: LatLng(widget.rideRequest.destination.latitude, widget.rideRequest.destination.longitude)
+    ).then((Directions? directions) {
+      setState(() {
+        info = directions;
+      });
+    });
 
 
     showDialog(context: context, builder: (context) {
@@ -91,8 +170,8 @@ class _GoToRiderState extends State<GoToRider> {
     setState(() {
       rideStarted = true;
     });
-    x = tracker.onLocationChanged.listen((LocationData? data) async {
 
+    x = tracker.onLocationChanged.listen((LocationData? data) async {
       if( data == null)
         return;
 
@@ -116,153 +195,25 @@ class _GoToRiderState extends State<GoToRider> {
   }
 
   void updateDriverMarker(LocationData data) {
-    if( marker == null)
-      return;
-
-    LatLng latLng = LatLng(data.latitude! , data.longitude!);
-
-    marker = Marker(
-      markerId: MarkerId("driver"),
-      position: latLng,
-      rotation: data.heading!,
-      draggable: false,
-      //zIndex: 2,
-      flat: true,
-      icon: BitmapDescriptor.fromBytes(imageData!)
-    );
-
     mapController.future.then((GoogleMapController controller) async {
       controller.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: LatLng(data.latitude!, data.longitude!),
-          bearing: data.heading!,
-          tilt: 90,
-          zoom: 18
-        )
+          CameraPosition(
+              target: LatLng(data.latitude!, data.longitude!),
+              bearing: data.heading!,
+              tilt: 90,
+              zoom: 18
+          )
       ));
-      setState(() {
-
-      });
-    });
-
-
-
-
-  }
-
-
-  @override
-  void initState() {
-
-    super.initState();
-
-
-
-    getCurrentLocation();
-
-    destination = Marker(
-      markerId: MarkerId("destination"),
-      position: LatLng(widget.rideRequest.location.latitude, widget.rideRequest.location.longitude),
-      rotation: 0,
-      draggable: false,
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue)
-    );
-
-    DirectionsRepository().getDirections(
-        origin: widget.origin!,
-        destination: LatLng(widget.rideRequest.location.latitude, widget.rideRequest.location.longitude))
-        .then((Directions? directions) async{
-      if( directions != null) {
-
-        LocationData data = await tracker.getLocation();
-
-
-        // notifies the rider who will pick him up
-        await FirebaseFirestore.instance
-          .collection("ride_requests")
-          .doc(widget.rideRequest.id)
-          .update({
-              'answeredBy'      : FirebaseAuth.instance.currentUser!.uid,
-              'answeredFrom'    : GeoPoint(data.latitude!, data.longitude!),
-              'expectedArrival' : directions.totalDuration,
-              'isActive'        : false
-          });
-
-
-        setState(() {
-
-          info = directions;
-          mapController.future.then((GoogleMapController controller) {
-            controller.animateCamera(CameraUpdate.newCameraPosition(
-                CameraPosition(
-                    target: widget.origin!,
-                    zoom: 11
-                )));
-          });
-        });
-      }
-
     });
   }
 
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
 
-    if( isFirstRun) {
-      SchedulerBinding.instance!.addPostFrameCallback((timeStamp) async {
-        String mapValue = await DefaultAssetBundle.of(context).loadString('assets/map/style.json');
-        setState(() {
-          isFirstRun = false;
-          mapStyle = mapValue;
-        });
-      });
-    }
-  }
-
-  Future<void> getCurrentLocation() async {
-    print('Fetching position..');
-
-    LocationData data = await tracker.getLocation();
-
-    setState(() {
-      initialCameraPosition = CameraPosition(
-        target: LatLng(data.latitude!, data.longitude!),
-        zoom: 15
-      );
-    });
-
-      ByteData byteData = await DefaultAssetBundle.of(context).load('assets/images/location.png');
-      ui.Codec codec = await ui.instantiateImageCodec(byteData.buffer.asUint8List(), targetWidth: 60, targetHeight: 120);
-      ui.FrameInfo fi = await codec.getNextFrame();
-      Uint8List list =  (await fi.image.toByteData(format: ui.ImageByteFormat.png))!.buffer.asUint8List();
-
-      setState(() {
-        imageData = list;
-        marker = Marker(
-          markerId: MarkerId("driver"),
-          position: LatLng(data.latitude!, data.longitude!),
-          icon: BitmapDescriptor.fromBytes(list)
-        );
-      });
-
-}
 
   @override
   Widget build(BuildContext context) {
 
-    if( initialCameraPosition == null) {
-      return Scaffold(
-        body: Container(
-          child: Center(
-            child: Text('Fetching your position.s..'),
-          ),
-        ),
-      );
-    }
-
-    if( mapStyle == null || imageData == null || marker == null || info == null) {
+    if(info == null) {
       return Scaffold(
         body: Container(
           child: Center(
@@ -277,9 +228,12 @@ class _GoToRiderState extends State<GoToRider> {
         children: [
           GoogleMap(
             zoomControlsEnabled: false,
-            initialCameraPosition: initialCameraPosition!,
+            initialCameraPosition: CameraPosition(
+              target: Provider.of<LocationProvider>(context, listen: false).lastLocation!,
+              zoom: 15
+            ),
             onMapCreated: (GoogleMapController controller) async {
-              await controller.setMapStyle(mapStyle);
+              await controller.setMapStyle(Provider.of<LocationProvider>(context, listen: false).mapStyle);
               mapController.complete(controller);
             },
             polylines: info == null ? Set.of([]) : Set.of([
@@ -290,7 +244,7 @@ class _GoToRiderState extends State<GoToRider> {
                   points: info!.polylinePoints.map((e) => LatLng(e.latitude, e.longitude)).toList()
               ),
             ]),
-            markers: Set.of([destination, marker!]),
+            markers: Set.of([location, destination, Provider.of<LocationProvider>(context).driverMarker!]),
 
           ),
 
@@ -312,7 +266,6 @@ class _GoToRiderState extends State<GoToRider> {
             ),
           ) else Container(),
 
-
          !rideStarted?
           Container(
             margin: EdgeInsets.only(bottom: 20, left: 20, right: 20),
@@ -330,7 +283,15 @@ class _GoToRiderState extends State<GoToRider> {
                         textStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.w800, letterSpacing: 1.0)
                       ),
                       onPressed: () async{
+                        mapController.future.then((value) => value.animateCamera(CameraUpdate.newCameraPosition(
+                            CameraPosition(
+                          target: Provider.of<LocationProvider>(context, listen : false).lastLocation!,
+                          tilt: 90,
+                          zoom: 18
+                        )))
+                        );
                         startListener();
+
                       },
                       child: Text('START TRIP'),
                     ),
@@ -340,8 +301,7 @@ class _GoToRiderState extends State<GoToRider> {
             ),
           )  : Container(),
 
-
-          rideStarted ? Align(
+          rideStarted && !originReached ? Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               margin: EdgeInsets.only(bottom: 30, left: 30, right: 30),
@@ -366,7 +326,46 @@ class _GoToRiderState extends State<GoToRider> {
                 ],
               )
             ),
+          ) : Container(),
+
+          originReached ? Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+                margin: EdgeInsets.only(bottom: 30, left: 30, right: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            textStyle: TextStyle(fontSize: 22, color: Colors.black),
+                            primary: Colors.white,
+                            onPrimary: Colors.black
+                        ),
+                        onPressed: () async{
+                          showDialog(context: context, builder: (context) => AlertDialog(
+                            title: Text('You ended the ride.'),
+                            content: Text('If you had only complaints, find your ride in your history section and submit to us.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                                child: Text('OK'))
+                            ],
+                          ));
+                        },
+                        child: Text('End the ride'),
+                      ),
+                    ),
+                  ],
+                )
+            ),
           ) : Container()
+
         ],
       )
     );
