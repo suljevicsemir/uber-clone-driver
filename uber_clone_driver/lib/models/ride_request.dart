@@ -32,4 +32,18 @@ class RideRequest {
       startInterval = snapshot.get(fields.startInterval),
       id            = snapshot.id,
       endInterval   = snapshot.get(fields.endInterval);
+
+  Map<String, dynamic> toMap() {
+    return {
+      fields.timestamp     : timestamp,
+      fields.destination   : destination,
+      fields.location      : location,
+      fields.riderId       : riderId,
+      fields.token         : token,
+      fields.startInterval : startInterval,
+      'id'                 : id,
+      fields.endInterval   : endInterval
+    };
+  }
+
 }
